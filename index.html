@@ -1,0 +1,237 @@
+
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Enervi7 v7.0 Core</title>
+<link rel="manifest" href="manifest.json"/>
+<meta name="theme-color" content="#6c36c6"/>
+<style>
+:root{
+  --bg:#0f0b26; --panel:#161235; --panel2:#1b1542; --ink:#f4f0ff; --muted:#b7aee0; --acc:#7d4dff;
+  --ok:#22c55e; --mid:#f59e0b; --bad:#ef4444;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",Roboto,Helvetica,Arial,sans-serif}
+header{padding:16px 20px;background:linear-gradient(180deg,#6c36c6,#4d2ea8);position:sticky;top:0;z-index:10}
+h1{margin:0;font-size:22px}
+.small{opacity:.85;font-size:12px}
+.container{max-width:880px;margin:0 auto;padding:16px}
+.card{background:var(--panel);border-radius:14px;padding:14px 16px;margin:12px 0;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+section h2{font-size:18px;margin:0 0 10px}
+.btn{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.range{padding:12px;background:var(--panel2);border-radius:12px;margin:10px 0}
+label{display:block;margin-bottom:6px}
+input[type=range]{width:100%}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;margin-left:6px;border:1px solid rgba(255,255,255,.18)}
+.badge.ok{color:var(--ok);border-color:rgba(34,197,94,.35)}
+.badge.mid{color:var(--mid);border-color:rgba(245,158,11,.35)}
+.badge.bad{color:var(--bad);border-color:rgba(239,68,68,.35)}
+#radar svg{width:100%;max-height:360px;background:#120e2d;border-radius:12px}
+.detail{background:#120e2d;border-radius:12px;padding:10px 12px;margin-top:10px;border:1px solid rgba(255,255,255,.06)}
+.tag{display:inline-block;border:1px solid #3b2e85;color:#cfc5ff;padding:2px 6px;border-radius:8px;margin:2px;font-size:12px}
+hr.sep{border:none;border-top:1px dashed rgba(255,255,255,.14);margin:12px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>Enervi7 v7.0 Core</h1>
+  <div class="small">本版封版：<b>14 題量表 + SVG 雷達 + 七階資訊卡</b>（離線可用，不依賴外部 CDN）</div>
+</header>
+
+<div class="container">
+
+  <section class="card" id="qs">
+    <h2>🧭 14 題量表（0–10）</h2>
+    <div class="small">0 = 完全不符合／幾乎沒有　｜　10 = 非常符合／幾乎總是</div>
+    <div id="qwrap"></div>
+    <div class="row">
+      <button class="btn" id="gen">生成能量雷達</button>
+      <button class="btn" id="reset" style="background:#43318f">重置分數</button>
+    </div>
+  </section>
+
+  <section class="card" id="radarCard" style="display:none">
+    <h2>⚡ 能量雷達圖</h2>
+    <div id="radar"></div>
+    <div id="summary" class="small" style="margin-top:8px;opacity:.9"></div>
+  </section>
+
+  <section class="card" id="cards" style="display:none">
+    <h2>🌈 七階資訊卡（自動展開最低兩階）</h2>
+    <div id="cardsWrap"></div>
+  </section>
+
+</div>
+
+<script>
+// ---- 基礎資料 ----
+const STAGES=[
+ {id:'S1', name:'白｜能量覺知'},
+ {id:'S2', name:'藍｜穩定與淨化'},
+ {id:'S3', name:'橙｜能量流動'},
+ {id:'S4', name:'黃｜內在力量'},
+ {id:'S5', name:'綠｜共振與連結'},
+ {id:'S6', name:'靛藍｜意識擴展'},
+ {id:'S7', name:'紫｜靈魂整合'},
+];
+const QUESTIONS=[
+  {stage:'S1', text:'我能清楚覺察自己此刻的身心狀態。'},
+  {stage:'S1', text:'我能在混亂時，迅速把注意力帶回當下。'},
+  {stage:'S2', text:'面對壓力或衝突時，我能保持冷靜不失衡。'},
+  {stage:'S2', text:'我能有效地釋放累積的負面情緒與雜念。'},
+  {stage:'S3', text:'我常感覺靈感／情感在體內自然流動。'},
+  {stage:'S3', text:'我能順勢調整步調，不僵硬或卡住。'},
+  {stage:'S4', text:'做決定時，我能堅定地選擇對自己真的好的事。'},
+  {stage:'S4', text:'遇到挑戰，我仍能相信自己並往前一步。'},
+  {stage:'S5', text:'我能真誠表達，也樂於傾聽他人。'},
+  {stage:'S5', text:'我能感到自己與他人、與世界是連結的。'},
+  {stage:'S6', text:'我信任直覺，且能從中獲得有用的指引。'},
+  {stage:'S6', text:'我能從日常事件看見更深的洞見與意義。'},
+  {stage:'S7', text:'我能把過去的經驗整合成力量，而不是枷鎖。'},
+  {stage:'S7', text:'我常感到自己完整、對生命方向踏實安心。'},
+];
+const CARD_META={
+  S1:{keywords:['覺知當下','辨識情緒','看見模式','誠實面對'],
+      actions:['寫三句「此刻我真實的感受是…」','3 分鐘腹式呼吸（4-4-6）並記錄身體感受','列出 1 個反覆出現的念頭，標記：是事實還是解讀？']},
+  S2:{keywords:['鬆綁負荷','情緒代謝','放下執著','完成回收'],
+      actions:['做一次「寫了就撕/燒」釋放書寫（2–3 段）','身體掃描，對緊繃部位做 60 秒放鬆','將一件拖延小事今天完成並打勾']},
+  S3:{keywords:['允許發生','對齊意圖','資源感','安全感'],
+      actions:['用「我允許…」造句 3 句（對應今日焦點）','回顧 1 次被支持的證據，寫下為何可複製','今天主動請求一次幫助（小範圍即可）']},
+  S4:{keywords:['最小步驟','可驗證','節奏','執行力'],
+      actions:['把目標拆成 10 分鐘可完成的一步，現在就做','設定今日 3 件 MIT','完成後「公開回報」給可信任對象']},
+  S5:{keywords:['專注','回饋循環','韌性','迭代'],
+      actions:['把卡點→調整 1 個微策略（A/B 嘗試）','25 分鐘番茄鐘全程專注','記錄 1 個有效回饋，明天沿用']},
+  S6:{keywords:['連結','價值感','貢獻','擴散'],
+      actions:['分享一個小成果或洞見到社群／朋友','邀請 1 人給具體回饋（3 句具體描述）','主動建立一個合作可能（發出一則邀請）']},
+  S7:{keywords:['總結經驗','固化習慣','結構化','長期化'],
+      actions:['用 5 句話摘要本週 3 件學到＋1 改進','把有效步驟寫成 Checklist 並固定到行程','為下個週期設定一個可衡量指標（KPI）']},
+};
+const TRANSITIONS={
+  'S1→S2':['把「我觀察到…」改寫成「我願意放下…」×3','情緒書寫→身體放鬆收尾（頸肩／腹部）'],
+  'S2→S3':['列出 3 個現有資源（人／物／技能）','寫 1 段：若一切對我有利，今天我允許什麼？'],
+  'S3→S4':['產出「最小可行步驟」並在 10 分鐘內啟動','預約 1 個「行動時段」，行前只做準備清單'],
+  'S4→S5':['把今日行動回饋記錄並做 1 次微調','建立 25 分鐘專注儀式，結束回顧 2 分鐘'],
+  'S5→S6':['公開分享 1 個進展／案例，索取具體回饋','辨識最被共鳴的價值，明天主打該元素'],
+  'S6→S7':['把有效做法寫成 SOP／Checklist','選一個可持續節奏（週／月）放進行事曆'],
+  'S7→S1':['本週回顧 3 句＋下一輪新意圖 1 句','挑選 1 個欲精進的指標，設置觀測方式'],
+};
+
+// ---- 畫面組裝：14 題 ----
+const qwrap = document.getElementById('qwrap');
+QUESTIONS.forEach((q, i)=>{
+  const s = STAGES.find(x=>x.id===q.stage);
+  const id = 'q'+(i+1);
+  const div = document.createElement('div');
+  div.className = 'range';
+  div.innerHTML = `
+    <label>${i+1}. <b>${s.name}</b>｜${q.text}</label>
+    <input type="range" min="0" max="10" step="1" value="5" id="${id}" oninput="document.getElementById('${id}-v').textContent=this.value">
+    <div class="small">目前：<span id="${id}-v">5</span> / 10</div>
+  `;
+  qwrap.appendChild(div);
+});
+
+// ---- 計算平均 ----
+function getAverages(){
+  const m = {S1:[],S2:[],S3:[],S4:[],S5:[],S6:[],S7:[]};
+  QUESTIONS.forEach((q, i)=>{
+    const v = Number(document.getElementById('q'+(i+1)).value||0);
+    m[q.stage].push(v);
+  });
+  const avg={}; Object.keys(m).forEach(k=> avg[k] = m[k].reduce((a,b)=>a+b,0)/m[k].length );
+  return avg;
+}
+
+// ---- 雷達圖（純 SVG） ----
+function drawRadar(avg){
+  const axes = ['S1','S2','S3','S4','S5','S6','S7'];
+  const size=320, cx=size/2, cy=size/2, R=130;
+  const toXY = (i, r)=>{
+    const ang = -Math.PI/2 + i*2*Math.PI/axes.length;
+    return [cx + r*Math.cos(ang), cy + r*Math.sin(ang)];
+  };
+  let svg = `<svg viewBox="0 0 ${size} ${size}" aria-label="能量雷達圖">`;
+  // rings
+  for(let g=1; g<=5; g++){
+    const r=R*g/5;
+    svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#2a215e" stroke-width="1"/>`;
+  }
+  // axes
+  axes.forEach((_,i)=>{
+    const [x,y]=toXY(i,R);
+    svg += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#2a215e" stroke-width="1"/>`;
+  });
+  // polygon
+  const pts = axes.map((k,i)=>{
+    const v=avg[k]||0; const r=R*(v/10); const [x,y]=toXY(i,r); return `${x},${y}`;
+  }).join(' ');
+  svg += `<polygon points="${pts}" fill="rgba(125,77,255,.45)" stroke="#a78bfa" stroke-width="2"/>`;
+  // labels
+  axes.forEach((k,i)=>{
+    const [x,y]=toXY(i, R+14);
+    const label = STAGES.find(s=>s.id===k).name;
+    svg += `<text x="${x}" y="${y}" fill="#cfc5ff" font-size="10" text-anchor="middle">${label}</text>`;
+  });
+  svg += `</svg>`;
+  document.getElementById('radar').innerHTML = svg;
+}
+
+// ---- 資訊卡（最低兩階） ----
+function nextStageId(id){ const i=STAGES.findIndex(s=>s.id===id); return STAGES[(i+1)%STAGES.length].id; }
+function badge(v){ return v>=7.5?'<span class="badge ok">優勢</span>': v>=5.5?'<span class="badge mid">觀照</span>':'<span class="badge bad">補強</span>'; }
+function renderCards(avg){
+  const arr = Object.keys(avg).map(k=>({id:k,score:avg[k]})).sort((a,b)=>a.score-b.score).slice(0,2);
+  const wrap = document.getElementById('cardsWrap'); wrap.innerHTML='';
+  arr.forEach(it=>{
+    const meta = CARD_META[it.id]; const next = nextStageId(it.id);
+    const trans = TRANSITIONS[`${it.id}→${next}`] || [];
+    const box = document.createElement('div');
+    box.className='detail';
+    box.innerHTML = `
+      <div><b>${STAGES.find(s=>s.id===it.id).name}</b>｜平均 <b>${it.score.toFixed(1)}</b> 分 ${badge(it.score)}</div>
+      <div class="small" style="margin:6px 0">關鍵字：${meta.keywords.map(k=>`<span class="tag">${k}</span>`).join('')}</div>
+      <hr class="sep"/>
+      <div><b>行動建議</b><br>${meta.actions.map(a=>`• ${a}`).join('<br>')}</div>
+      <hr class="sep"/>
+      <div><b>瓶頸轉換（${it.id.replace('S','S')}→${next}）</b><br>${trans.map(t=>`• ${t}`).join('<br>')}</div>
+    `;
+    wrap.appendChild(box);
+  });
+}
+
+// ---- 事件 ----
+document.getElementById('gen').addEventListener('click', ()=>{
+  const avg = getAverages();
+  drawRadar(avg);
+  document.getElementById('radarCard').style.display='block';
+  document.getElementById('cards').style.display='block';
+  const txt = STAGES.map(s=>`${s.name}：${avg[s.id].toFixed(1)}`).join(' ｜ ');
+  document.getElementById('summary').textContent = txt;
+  renderCards(avg);
+  // persist last answers
+  const ans = Array.from({length:14}, (_,i)=> Number(document.getElementById('q'+(i+1)).value||0) );
+  localStorage.setItem('e7_v70_scores', JSON.stringify(ans));
+});
+document.getElementById('reset').addEventListener('click', ()=>{
+  for(let i=1;i<=14;i++){ const el=document.getElementById('q'+i); if(el){ el.value=5; document.getElementById('q'+i+'-v').textContent='5'; } }
+  localStorage.removeItem('e7_v70_scores');
+});
+
+// 恢復上次分數（若存在）
+(function restore(){
+  try{
+    const ans = JSON.parse(localStorage.getItem('e7_v70_scores')||'null');
+    if(Array.isArray(ans) && ans.length===14){
+      ans.forEach((v,i)=>{ const el=document.getElementById('q'+(i+1)); if(el){ el.value=v; document.getElementById('q'+(i+1)+'-v').textContent=v; } });
+    }
+  }catch(e){}
+})();
+
+// PWA
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw.js'); }
+</script>
+</body>
+</html>
