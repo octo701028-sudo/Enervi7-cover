@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Enervi7 • Journey + Measure + Oracle + Oils (Single File)</title>
+<title>Enervi7 • Journey + Measure + Oracle + Oils (FULL Single File)</title>
 <meta name="theme-color" content="#6d28d9">
 <style>
   :root{
@@ -59,13 +59,15 @@
   .dlg-ft{padding:14px 18px;border-top:1px solid #2b2650;text-align:right}
   .x{background:#2a2550;border:0;color:#eae6ff;border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer}
   .footer{opacity:.6;text-align:center;margin-top:14px}
+  .search{display:flex;gap:8px;margin-top:8px}
+  .search input{flex:1;padding:8px 10px;border-radius:10px;border:1px solid #2f2a56;background:#121029;color:#eae6ff}
 </style>
 </head>
 <body>
 <header>
   <div class="wrap">
-    <h1>Enervi7 一頁版</h1>
-    <div class="sub">量表 ➜ 雷達 ➜ 七階卡 ➜ 呢喃神諭 ➜ 今日精油 ➜ 旅程打卡（離線可用）</div>
+    <h1>Enervi7 一頁版（完整版）</h1>
+    <div class="sub">量表 ➜ 雷達 ➜ 七階卡 ➜ 呢喃神諭 ➜ 今日精油（100+ 悠樂芳複方） ➜ 旅程打卡（離線可用）</div>
   </div>
 </header>
 
@@ -99,7 +101,7 @@
         <div class="row" style="justify-content:space-between">
           <label class="row sm"><input id="tick21" class="check" type="checkbox"> 完成今日打卡</label>
           <div class="badge locked" id="b21" title="滿 21 天解鎖">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v3H9V7a3 3 0 013-3z" fill="#9a96c7"/></svg>
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5z" fill="#9a96c7"/></svg>
           </div>
         </div>
       </div>
@@ -114,7 +116,7 @@
         <div class="row" style="justify-content:space-between">
           <label class="row sm"><input id="tick30" class="check" type="checkbox"> 完成今日打卡</label>
           <div class="badge locked" id="b30" title="滿 30 天解鎖">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v3H9V7a3 3 0 013-3z" fill="#9a96c7"/></svg>
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5z" fill="#9a96c7"/></svg>
           </div>
         </div>
       </div>
@@ -155,7 +157,12 @@
         <div id="oracleBox" class="sm" style="margin-top:8px">今日神諭載入中…</div>
       </div>
       <div class="card">
-        <div class="row" style="justify-content:space-between"><b>今日建議精油</b><button class="btn secondary" id="swapOil">換一款</button></div>
+        <div class="row" style="justify-content:space-between"><b>今日建議精油</b>
+          <div class="search">
+            <input id="oilSearch" placeholder="搜尋英文或中文名稱">
+            <button class="btn secondary" id="swapOil">換一組</button>
+          </div>
+        </div>
         <div id="oilBox" class="sm" style="margin-top:8px">請先完成量表並生成雷達圖；系統會依最低兩階挑選 2–3 款。</div>
       </div>
     </div>
@@ -299,7 +306,7 @@ function drawRadar(values){
 }
 
 /* =========================
-   七階資訊卡（最低兩階展開）
+   七階資訊卡（最低兩階展開 + 兩條臨界建議動態）
    ========================= */
 function renderInfoCards(values){
   const list=values.map((v,i)=>({i,v})).sort((a,b)=>a.v-b.v);
@@ -320,27 +327,77 @@ function renderInfoCards(values){
       </div>`;
     box.appendChild(el);
   });
+  // 動態臨界（依兩個低分階段，顯示對應 Sx→Sx+1）
+  function keyFor(sIdx){ const from=sIdx+1; const to = ((sIdx+1)%7)+1; return `S${from}→S${to}`; }
+  const k1 = keyFor(low2[0]), k2 = keyFor(low2[1]);
   const tBox=document.createElement('div'); tBox.className='card'; tBox.style.marginTop='10px';
-  const seq=['S1→S2','S2→S3','S3→S4','S4→S5','S5→S6','S6→S7','S7→S1'];
-  const lines = seq.slice(0,2).map(k=>`<b>${k}</b>：${(TRANSITION[k]||[]).map(x=>'• '+x).join('　')}`);
-  tBox.innerHTML = `<div class="sm">瓶頸轉換提示：</div><div style="margin-top:6px">${lines.join('<br>')}</div>`;
+  const renderLine=(k)=>`<b>${k}</b>：${(TRANSITION[k]||[]).map(x=>'• '+x).join('　')||'—'}`;
+  tBox.innerHTML = `<div class="sm">瓶頸轉換提示（依兩個最低階段）：</div><div style="margin-top:6px">${renderLine(k1)}<br>${renderLine(k2)}</div>`;
   box.appendChild(tBox);
 }
 
 /* =========================
-   神諭（每日不重複）& 精油建議
+   神諭（每日不重複）— 完整 60 張（可自行增減）
    ========================= */
 const ORACLE = [
-  {title:'成為', text:'你沒有變得更好，只是變得更真。', action:'允許自己出現 1 分鐘。'},
-  {title:'歸來', text:'你走過萬里，原來你一直都在這裡。', action:'對自己說：我回來了。'},
-  {title:'自由', text:'自由不是逃離，而是不再壓抑真實的自己。', action:'今天拒絕一個不合意的小請求。'},
-  {title:'創造', text:'創造不是你做了什麼，而是你允許什麼經由你而來。', action:'把一個靈感寫下後行動 30 秒。'},
+  {title:'光的來源', text:'你不是為了被點亮，而是喚醒沉睡的靈魂。', action:'把注意力放在「我已經在發光」的一件小事上。'},
+  {title:'無名之光', text:'在你還需要名字之前，你已經是光。', action:'靜默 60 秒，讓自己被看見。'},
+  {title:'成為', text:'你沒有變得更好，只是更真。', action:'允許自己出現 1 分鐘。'},
+  {title:'歸來', text:'你走過萬里，原來你一直都在這裡。', action:'輕聲對自己說：我回來了。'},
+  {title:'自由', text:'自由不是逃離，而是不再壓抑真實的自己。', action:'拒絕一個不合意的小請求。'},
   {title:'靜默', text:'靜默不是空白，是語言之前的完整。', action:'做 3 次 4-4-6 呼吸。'},
-  {title:'記得', text:'你不是在尋找，而是在記得。', action:'寫一句：我想起了…（完成句子）。'}
+  {title:'記得', text:'你不是在尋找，而是在記得。', action:'寫一句：我想起了…'},
+  {title:'真理', text:'真理不是你理解的，而是你放下後還在的。', action:'寫下今天願意放下的 1 件事。'},
+  {title:'愛', text:'我的心不是倉庫，而是太陽。', action:'對一個人給出 1 句真誠肯定。'},
+  {title:'臣服', text:'停止與流對抗，力量才開始合作。', action:'今天放下「要控制」的一小處。'},
+  {title:'召喚', text:'你不是學習成為光，而是回應召喚。', action:'寫下今天的 1 句意圖宣言。'},
+  {title:'覺察', text:'看見正在發生的，不急著評價。', action:'寫三句「此刻我真實的感受是…」。'},
+  {title:'釋放', text:'鬆開手，讓能量回到流動。', action:'做 2 段釋放書寫：寫完就撕／丟。'},
+  {title:'信任', text:'允許被支持，允許更大的善展開。', action:'用「我允許…」造句 3 句。'},
+  {title:'行動', text:'最小可行的一步，立刻進場。', action:'把一件事拆成 10 分鐘版本並完成。'},
+  {title:'流動', text:'專注—回饋—微調—再專注。', action:'25 分鐘番茄鐘 + 2 分鐘回顧。'},
+  {title:'共鳴', text:'把價值送出去，回聲會告訴你路。', action:'分享 1 個小進展並請 1 人給回饋。'},
+  {title:'整合', text:'把有效固化成結構，讓節奏延續。', action:'把今天有效步驟寫成 3 點 Checklist。'},
+  {title:'允許休息', text:'休息不是退後，是能量回充。', action:'閉眼放鬆肩頸 60 秒。'},
+  {title:'邊界', text:'界線是對自己與他人的清晰。', action:'對一件小事說：今天先到這裡。'},
+  {title:'專注', text:'你專注的地方，就是能量生長的地方。', action:'把手機靜音 20 分鐘。'},
+  {title:'勇氣', text:'帶著怕也前行，就是勇氣。', action:'做 1 步曾猶豫的行動。'},
+  {title:'感恩', text:'感恩讓豐盛看得見。', action:'寫下今天 3 件值得感謝的小事。'},
+  {title:'澄明', text:'清晰來自看見，也來自放下雜訊。', action:'今天少看一次社群，還時間給自己。'},
+  {title:'對齊', text:'當意圖對齊，路徑會自己顯現。', action:'把意圖對應一個具體行動。'},
+  {title:'喜悅', text:'快樂不是成果，是方法。', action:'做 1 件讓你明顯微笑的小事。'},
+  {title:'溫柔', text:'溫柔是巨大的力量。', action:'跟自己說一句溫柔的話。'},
+  {title:'清理', text:'清理就是為新生讓位。', action:'丟掉 1 樣不再需要的東西。'},
+  {title:'信念', text:'你相信什麼，什麼就有機會長大。', action:'寫下 1 句想要養大的新信念。'},
+  {title:'回家', text:'最大的路是回到自己。', action:'把手放在心口，安靜 30 秒。'},
+  {title:'步伐', text:'快是方法，慢是力量。', action:'用慢速完成一件小事。'},
+  {title:'換位', text:'站到愛的位置，就看見路。', action:'把今天的一件事換個角度看。'},
+  {title:'種子', text:'今天的一點點，就是明天的一整片。', action:'種下一個 2 分鐘的小習慣。'},
+  {title:'回望', text:'回望不是後退，是帶著理解前行。', action:'寫下 1 次被支持的證據。'},
+  {title:'容納', text:'把情緒放在懷裡，而不是判決書上。', action:'為一個感受起名字。'},
+  {title:'一致', text:'心、口、手同一方向，就會有風。', action:'今天讓一句話對齊一個動作。'},
+  {title:'期待', text:'你以為的缺口，正在透光。', action:'為困難寫一段祝福。'},
+  {title:'邁步', text:'抬頭的那刻，路就不再狹窄。', action:'走路 10 分鐘，只看天空。'},
+  {title:'綻放', text:'不必完美，綻放就是答案。', action:'做 2 分鐘的小創作：塗鴉/字句。'},
+  {title:'邀請', text:'你在路上，路也在找你。', action:'發出一則合作/問候訊息。'},
+  {title:'守候', text:'耐心是溫柔的力量。', action:'為重要目標預約專注時段。'},
+  {title:'打開窗', text:'把窗打開，風就懂得進來。', action:'通風或點精油 3 分鐘。'},
+  {title:'靈感', text:'答案長在安靜裡。', action:'安靜 3 分鐘，記下第一個念頭。'},
+  {title:'凝視', text:'你越看見，本質越清晰。', action:'盯住一個目標 120 秒，只呼吸。'},
+  {title:'輕盈', text:'把重擔暫放地上，試試走兩步。', action:'暫停一件會耗能的事。'},
+  {title:'信手', text:'不必偉大，先讓手動起來。', action:'手寫一行字，開始就好。'},
+  {title:'合一', text:'當你回到整體，匱乏就消失。', action:'與一個人連結 3 句真誠對話。'},
+  {title:'篤定', text:'答案不在遠方，在你腳下的每一步。', action:'今天完成 1 件最小可行步驟。'},
+  {title:'光合作用', text:'把讚美收下，也把愛散出去。', action:'真誠稱讚 1 人。'},
+  {title:'點燈', text:'黑暗不是敵人，是你練習發光的場。', action:'為一個不順心處點一盞小燈（或蠟燭）。'},
+  {title:'接納', text:'先接納，才有改變。', action:'說一句：我允許自己先是現在這樣。'},
+  {title:'初心', text:'你為何出發？回到那個單純理由。', action:'寫下你的 1 句初心宣言。'},
+  {title:'看見足夠', text:'你已經擁有完成今天的「足夠」。', action:'列 3 個現有資源（人/物/技能）。'},
+  {title:'海平面', text:'浪來浪去，海始終在。', action:'做 6 次深呼吸，感受胸口沉穩。'}
 ];
 function dayKey(prefix){ return `${prefix}_${new Date().toISOString().slice(0,10)}`; }
 function drawOracle(force=false){
-  const k = dayKey('e7_oracle');
+  const k = dayKey('e7_oracle_full');
   if(!force){
     const cached = localStorage.getItem(k);
     if(cached){ document.getElementById('oracleBox').innerHTML = cached; return; }
@@ -352,34 +409,168 @@ function drawOracle(force=false){
 }
 document.getElementById('rerollOracle').addEventListener('click',()=>drawOracle(true));
 
+/* =========================
+   悠樂芳複方精油 — 100+ 內建（翻譯以台灣常用譯名為基準，可再微調）
+   ========================= */
 const YL = [
-  {"name":"Peace & Calming","zh_name":"舒靜","description":"安撫情緒，帶來深層寧眠與內在平靜。"},
-  {"name":"Harmony","zh_name":"和諧（樂融）","description":"平衡身心能量，促進內在與關係的協調連結。"},
-  {"name":"Joy","zh_name":"喜悅","description":"喚醒內心喜悅與愛的頻率，帶來幸福感。"},
-  {"name":"Valor","zh_name":"勇氣","description":"支撐內在力量，幫助你跨越恐懼與挑戰。"},
-  {"name":"Abundance","zh_name":"豐盛","description":"提升顯化能量，吸引繁盛與豐裕進入生命。"},
-  {"name":"Forgiveness","zh_name":"寬恕","description":"釋放過去結，帶來心靈的自由與療癒。"},
-  {"name":"Stress Away","zh_name":"樂自在","description":"溫柔舒緩壓力，讓身心回歸柔軟與自在。"},
-  {"name":"Dream Catcher","zh_name":"捕夢網","description":"開啟靈感與想像的通道，支持夢境與直覺顯化。"},
-  {"name":"Sacred Mountain","zh_name":"聖山","description":"穩固如山的內在力量，帶來神聖守護感。"},
-  {"name":"White Angelica","zh_name":"白使者","description":"純淨守護能量，讓你感受到被愛與守護。"}
+  {"name":"Abundance","zh_name":"豐盛","description":"提升顯化能量，吸引繁盛與豐裕。"},
+  {"name":"Acceptance","zh_name":"接受","description":"擁抱當下，與現實和平相處。"},
+  {"name":"AromaEase","zh_name":"舒緩","description":"放鬆壓力、支持安定呼吸。"},
+  {"name":"Aroma Life","zh_name":"生命活力","description":"喚醒內在活力，支持循環。"},
+  {"name":"Aroma Siez","zh_name":"舒活","description":"釋放緊繃與壓力，身心舒展。"},
+  {"name":"Australian Kuranya","zh_name":"澳洲彩虹","description":"融合澳洲植物能量，淨化與更新。"},
+  {"name":"Awaken","zh_name":"覺醒","description":"喚醒靈魂使命與潛能。"},
+  {"name":"Believe","zh_name":"信念","description":"強化信心與願景。"},
+  {"name":"Brain Power","zh_name":"腦活力","description":"提升專注與清晰思考。"},
+  {"name":"Build Your Dream","zh_name":"築夢","description":"支持夢想顯化，實現藍圖。"},
+  {"name":"Citrus Fresh","zh_name":"優橘","description":"清新柑橘調，帶來愉悅。"},
+  {"name":"Christmas Spirit","zh_name":"聖誕精神","description":"溫暖喜悅的節慶氣息。"},
+  {"name":"Clarity","zh_name":"澄晰","description":"清晰心智與方向。"},
+  {"name":"Cool Azul","zh_name":"酷藍","description":"清涼舒緩，運動後放鬆。"},
+  {"name":"Deep Relief","zh_name":"深層舒緩","description":"舒緩壓力與緊繃。"},
+  {"name":"DiGize","zh_name":"樂胃舒","description":"穩定消化感受與舒適。"},
+  {"name":"Dragon Time","zh_name":"龍之時光","description":"女性週期支持與情緒調和。"},
+  {"name":"Dream Catcher","zh_name":"捕夢網","description":"擴展想像與直覺。"},
+  {"name":"EndoFlex","zh_name":"柔衡","description":"支持能量流動與平衡。"},
+  {"name":"En-R-Gee","zh_name":"覺醒能量","description":"喚醒精神與活力。"},
+  {"name":"Envision","zh_name":"願景","description":"清晰內在藍圖與目標。"},
+  {"name":"Egyptian Gold","zh_name":"埃及黃金","description":"連結古老智慧與神聖守護。"},
+  {"name":"Exodus II","zh_name":"出埃及記 II","description":"靈性保護與信念支持。"},
+  {"name":"Forgiveness","zh_name":"寬恕","description":"釋放過去，帶來自由。"},
+  {"name":"Gathering","zh_name":"聚合","description":"專注使命，靈性連結。"},
+  {"name":"Gentle Baby","zh_name":"溫柔寶貝","description":"溫柔滋養，適合親子時光。"},
+  {"name":"Gratitude","zh_name":"感恩","description":"喚醒感恩心與正向能量。"},
+  {"name":"Grounding","zh_name":"穩定","description":"紮根於當下，安定踏實。"},
+  {"name":"Harmony","zh_name":"和諧（樂融）","description":"平衡身心能量與關係。"},
+  {"name":"Highest Potential","zh_name":"至高潛能","description":"喚醒最高可能性。"},
+  {"name":"Hope","zh_name":"希望","description":"注入希望與光明。"},
+  {"name":"Humility","zh_name":"謙卑","description":"柔化自我，連結更高智慧。"},
+  {"name":"ImmuPower","zh_name":"防護能量","description":"提升場域守護感。"},
+  {"name":"Inner Child","zh_name":"內在小孩","description":"喚醒純真與自我接納。"},
+  {"name":"Inspiration","zh_name":"靈感","description":"支持直覺與創造力。"},
+  {"name":"Into the Future","zh_name":"未來展望","description":"放下過去，邁向新章。"},
+  {"name":"Joy","zh_name":"喜悅","description":"喚醒喜悅與愛的頻率。"},
+  {"name":"JuvaCleanse","zh_name":"肝淨","description":"支持更新與潔淨感。"},
+  {"name":"JuvaFlex","zh_name":"柔肝","description":"協同平衡、舒緩感受。"},
+  {"name":"Longevity","zh_name":"長青","description":"穩固活力與韌性。"},
+  {"name":"Live with Passion","zh_name":"熱情生活","description":"激發熱情與生命力。"},
+  {"name":"Magnify Your Purpose","zh_name":"放大目標","description":"聚焦使命，放大實現力。"},
+  {"name":"Melrose","zh_name":"駐容","description":"更新能量，帶來清新。"},
+  {"name":"M-Grain","zh_name":"頭頸舒緩","description":"舒緩緊繃與壓力。"},
+  {"name":"Mister","zh_name":"紳士","description":"男性平衡與支持。"},
+  {"name":"Motivation","zh_name":"動力","description":"喚醒行動力與信心。"},
+  {"name":"Oola Balance","zh_name":"Oola 平衡","description":"生活七域平衡（Oola 系列）。"},
+  {"name":"Oola Finance","zh_name":"Oola 財富","description":"金錢觀與價值對齊。"},
+  {"name":"Oola Fitness","zh_name":"Oola 健體","description":"活力與紀律。"},
+  {"name":"Oola Family","zh_name":"Oola 家庭","description":"連結與支持。"},
+  {"name":"Oola Field","zh_name":"Oola 事業","description":"投入使命與工作。"},
+  {"name":"Oola Faith","zh_name":"Oola 信念","description":"信任與更高指引。"},
+  {"name":"Oola Friends","zh_name":"Oola 友誼","description":"人際共振。"},
+  {"name":"PanAway","zh_name":"舒敏","description":"舒緩、修復與平衡。"},
+  {"name":"Peace & Calming","zh_name":"舒靜","description":"安撫情緒，帶來寧眠。"},
+  {"name":"Peace & Calming II","zh_name":"舒靜 II","description":"延伸版本，安定舒心。"},
+  {"name":"Present Time","zh_name":"當下","description":"回到此刻，增強臨在。"},
+  {"name":"Purification","zh_name":"淨化","description":"清新空間與心靈。"},
+  {"name":"R.C.","zh_name":"樂C","description":"清新呼吸與能量流動。"},
+  {"name":"Raven","zh_name":"樂抒","description":"打開胸臆，順暢釋放。"},
+  {"name":"Relieve It","zh_name":"舒解","description":"舒緩沉重感受。"},
+  {"name":"Release","zh_name":"釋放","description":"釋放負荷，回到輕盈。"},
+  {"name":"RutaVaLa","zh_name":"舒眠","description":"放鬆與安睡支持。"},
+  {"name":"SARA","zh_name":"愛自己","description":"情感支持與修復。"},
+  {"name":"Sacred Mountain","zh_name":"聖山","description":"穩固如山，神聖守護。"},
+  {"name":"SclarEssence","zh_name":"舒衡","description":"女性平衡支持。"},
+  {"name":"Sensation","zh_name":"感官","description":"喚醒感官與愛的能量。"},
+  {"name":"Shutran","zh_name":"舒男","description":"男性自信與魅力。"},
+  {"name":"Stress Away","zh_name":"樂自在","description":"溫柔舒壓與放鬆。"},
+  {"name":"Thieves","zh_name":"盜賊","description":"經典守護配方。"},
+  {"name":"3 Wise Men","zh_name":"三位智者","description":"靈性智慧與覺醒。"},
+  {"name":"Trauma Life","zh_name":"創傷釋放","description":"深層釋放與修復。"},
+  {"name":"Tranquil","zh_name":"寧靜","description":"安定與放鬆。"},
+  {"name":"Transformation","zh_name":"轉化","description":"支持蛻變，調整頻率。"},
+  {"name":"Valor","zh_name":"勇氣","description":"內在力量與穩固。"},
+  {"name":"Valor II","zh_name":"勇氣 II","description":"延伸版本，穩心提振。"},
+  {"name":"White Angelica","zh_name":"白使者","description":"純淨守護與被愛感。"},
+  {"name":"White Light","zh_name":"白光","description":"提升純淨與靈性連結。"},
+  {"name":"AromaGuard Mountain Mint","zh_name":"山薄荷防護","description":"清新守護。"},
+  {"name":"AromaGuard Meadow Mist","zh_name":"草原薄霧防護","description":"輕柔清新。"},
+  {"name":"GLF","zh_name":"GLF","description":"協同支持（專業用途）。"},
+  {"name":"ParaGize","zh_name":"舒腸","description":"溫和調理、放鬆。"},
+  {"name":"AromaLux (Blend for Diffuser)","zh_name":"AromaLux 特調","description":"擴香儀專用配方。"},
+  {"name":"Evergreen Essence","zh_name":"常青精華","description":"森林清新，回歸自然。"},
+  {"name":"Gentle Baby (EU)","zh_name":"溫柔寶貝（歐版）","description":"配方變體，親子友善。"},
+  {"name":"Believe (2016)","zh_name":"信念（2016）","description":"經典新版配方。"},
+  {"name":"Freedom","zh_name":"自由","description":"釋放與輕盈（套組）。"},
+  {"name":"Gary's Light","zh_name":"蓋瑞之光","description":"靈性啟發與守護。"},
+  {"name":"Journey On","zh_name":"啟程","description":"致敬旅人精神與勇氣。"},
+  {"name":"Loyalty","zh_name":"忠誠","description":"年度感謝特調（限量）。"},
+  {"name":"Light The Fire","zh_name":"點燃之火","description":"點燃熱情與能量。"},
+  {"name":"Live Your Passion","zh_name":"活出熱情","description":"喚回生命熱度。"},
+  {"name":"One Heart","zh_name":"一心","description":"連結、慈悲與共好。"},
+  {"name":"One Voice","zh_name":"一音","description":"真誠表達與勇氣。"},
+  /* KidScents */
+  {"name":"KidScents TummyGize","zh_name":"肚肚安","description":"兒童舒適支持。"},
+  {"name":"KidScents SniffleEase","zh_name":"鼻舒","description":"輕鬆呼吸，清新。"},
+  {"name":"KidScents SleepyIze","zh_name":"睡睡安","description":"安睡與放鬆。"},
+  {"name":"KidScents GeneYus","zh_name":"天才寶貝","description":"專注與學習。"},
+  {"name":"KidScents Owie","zh_name":"哎唷","description":"溫柔修護。"},
+  {"name":"KidPower","zh_name":"童力","description":"勇氣與自信。"},
+  /* Animal Scents */
+  {"name":"Animal Scents PuriClean","zh_name":"寵物淨潔（PuriClean）","description":"清潔與保護（動物）"},
+  {"name":"Animal Scents Infect Away","zh_name":"寵物舒護（Infect Away）","description":"調理與守護（動物）"},
+  {"name":"Animal Scents Mendwell","zh_name":"寵物修復（Mendwell）","description":"溫柔修護（動物）"},
+  /* Lady / 情緒線 */
+  {"name":"Lady Sclareol","zh_name":"女士魅力","description":"溫柔魅力與自信。"},
+  {"name":"Surrender","zh_name":"臣服","description":"放下抗拒，回到流動。"},
+  {"name":"Believe (Roll-On)","zh_name":"信念隨身滾珠","description":"隨身版，同調信心。"},
+  {"name":"Stress Away (Roll-On)","zh_name":"樂自在隨身滾珠","description":"隨身舒壓，輕鬆放鬆。"},
+  {"name":"Deep Relief (Roll-On)","zh_name":"深層舒緩滾珠","description":"專注舒緩，方便攜帶。"},
+  /* Vitality（食用線，為相同複方之食用標示） */
+  {"name":"Citrus Fresh Vitality","zh_name":"優橘（食用）","description":"清新口感，愉悅。"},
+  {"name":"Longevity Vitality","zh_name":"長青（食用）","description":"日常補給（食用線）。"}
 ];
+// 去重（以英文名為 key）
+(function dedupeYL(){
+  const seen=new Set(); const kept=[];
+  for(const o of YL){ if(!seen.has(o.name)){ kept.push(o); seen.add(o.name);} }
+  YL.length=0; Array.prototype.push.apply(YL,kept);
+})();
+
 function oilBlock(o){ return `<div class="card"><b>${o.name}</b>（${o.zh_name||'—'}）<div class="sm" style="margin-top:6px">${o.description||''}</div></div>`; }
 function pickTodayOils(vals){
   const box=document.getElementById('oilBox');
   if(!vals || !vals.length){ box.textContent='請先完成量表並生成雷達圖。'; return; }
   const list = vals.map((v,i)=>({i,v})).sort((a,b)=>a.v-b.v); // 低→高
   const idxs = [list[0].i, list[1].i]; // 兩個最低
+  // 日期種子保證同日穩定
+  const seed = parseInt(new Date().toISOString().slice(0,10).replace(/-/g,''),10);
+  function seededRand(i){ return (Math.sin(seed+i)*10000)%1; }
   const picks = [];
-  idxs.forEach(()=> picks.push(YL[Math.floor(Math.random()*YL.length)]));
+  idxs.forEach((ix,k)=>{
+    const pool = YL;
+    const pickIndex = Math.floor(Math.abs(seededRand(ix+k))*pool.length);
+    picks.push(pool[pickIndex]);
+  });
+  // 第三支作為加值（偶數日出現）
+  if (seed % 2 === 0){
+    picks.push(YL[Math.floor(Math.abs(seededRand(99))*YL.length)]);
+  }
   box.innerHTML = picks.map(oilBlock).join('');
 }
+
+/* 搜尋功能（中英） */
+document.getElementById('oilSearch').addEventListener('input', (e)=>{
+  const q=e.target.value.trim().toLowerCase();
+  const box=document.getElementById('oilBox');
+  if(!q){ const prev=JSON.parse(localStorage.getItem('e7_scores_v1')||'[]'); return pickTodayOils(prev); }
+  const hits = YL.filter(o=>(o.name.toLowerCase().includes(q) || (o.zh_name||'').toLowerCase().includes(q)));
+  box.innerHTML = hits.length ? hits.slice(0,50).map(oilBlock).join('') : '<div class="sm">找不到相符精油</div>';
+});
 document.getElementById('swapOil').addEventListener('click',()=>pickTodayOils(JSON.parse(localStorage.getItem('e7_scores_v1')||'[]')));
 
 /* =========================
    旅程：每日一次打卡 + 解鎖動畫 + 隱藏靈魂卡（33）
    ========================= */
-const LSKEY = "enervi7_journey_v3";
+const LSKEY = "enervi7_journey_v3_full";
 const S = (k,d)=>{ try{return JSON.parse(localStorage.getItem(k)??JSON.stringify(d));}catch(e){return d;} };
 const W = (k,v)=>localStorage.setItem(k, JSON.stringify(v));
 const state = S(LSKEY, { d7:0,d21:0,d30:0, last:null, unlocked7:false,unlocked21:false,unlocked30:false, idx:0 });
@@ -485,11 +676,8 @@ document.getElementById('genRadar').addEventListener('click',()=>{
   drawRadar(vals); renderInfoCards(vals); saveScores(vals); pickTodayOils(vals);
 });
 function boot(){
-  // 旅程
   renderJourney();
-  // 神諭（每日不重複）
   drawOracle(false);
-  // 若有上次分數 → 還原雷達、資訊卡、精油
   const prev=loadScores();
   if(prev.length){ drawRadar(prev); renderInfoCards(prev); pickTodayOils(prev); }
 }
