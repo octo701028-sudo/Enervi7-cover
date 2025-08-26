@@ -1,477 +1,611 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Enervi7 • v7 Full (Single File)</title>
-<meta name="theme-color" content="#6A46FF"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Enervi7 • Full Single File (7/21/30)</title>
+<meta name="theme-color" content="#5b2cff" />
 <style>
 :root{
-  --bg:#0e0f16;--card:#141624;--muted:#a9a9bb;--text:#e9e9f4;--line:#2b2e44;
-  --accent:#8a6bff;--accent2:#6ae0ff;--ok:#49e1a6;--warn:#ffb86b;
+  --bg:#0e0f16; --card:#171826; --card2:#15172a; --text:#e9e9f2; --muted:#a9a9c5; --brand:#7b61ff;
+  --ok:#61ffa1; --warn:#ffd66b; --bad:#ff7b9c; --chip:#23243a; --line:#2a2b40; --accent:#b998ff;
 }
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 system-ui,"PingFang TC","Noto Sans TC",sans-serif;}
-.wrap{max-width:880px;margin:0 auto;padding:0 16px}
-.header{position:sticky;top:0;z-index:9;padding:28px 0 18px;background:radial-gradient(1200px 240px at 50% -120px,rgba(138,107,255,.35),transparent 60%),linear-gradient(180deg,#1b1436,#131524);border-bottom:1px solid #201d33}
-h1{margin:0;font-weight:900;font-size:32px;background:linear-gradient(90deg,#c6b9ff,#8a6bff,#6ae0ff);-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.5px}
-.kv{margin-top:10px;display:flex;gap:12px;flex-wrap:wrap}
-.badge{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#1b1e2f;border:1px solid #2b2e44;color:#cfd2ff;font-weight:600;font-size:13px}
+*{box-sizing:border-box} html,body{margin:0;height:100%;background:var(--bg);color:var(--text);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",sans-serif}
+h1,h2,h3{margin:.2rem 0 1rem} h1{font-size:28px} h2{font-size:20px}
 .small{color:var(--muted);font-size:13px}
-.section{background:var(--card);border:1px solid var(--line);padding:18px;border-radius:16px;box-shadow:0 10px 24px rgba(0,0,0,.25);margin:18px 0}
-h2{margin:0 0 12px 0;font-size:20px}
-.row{display:flex;align-items:center;gap:12px;justify-content:space-between}
-.btn{cursor:pointer;border:1px solid #3a3870;background:linear-gradient(180deg,#6f66ff,#624ef7);padding:10px 14px;color:#fff;border-radius:12px;font-weight:700}
-.btn.secondary{background:#232641;color:#cfd2ff;border:1px solid #383b6a}
-.lock{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:#111422;border:1px solid #2b2e44;box-shadow:inset 0 0 0 0 rgba(106,224,255,.0);transition:.6s}
-.lock svg{opacity:.8}
-.lock.unlock{border-color:#70e9ff;box-shadow:0 0 0 6px rgba(106,224,255,.08),0 0 28px 6px rgba(106,224,255,.22), inset 0 0 40px rgba(106,224,255,.25);}
-.progress{height:8px;background:#1b1e2f;border:1px solid #2b2e44;border-radius:8px;overflow:hidden}
-.progress>span{display:block;height:100%;background:linear-gradient(90deg,#6ae0ff,#8a6bff);width:0%}
-.kpi{color:var(--muted);font-size:14px;margin-bottom:10px}
-.grid{display:grid;gap:16px}
-@media(min-width:760px){.grid{grid-template-columns:1fr 1fr 1fr}}
-blockquote{margin:12px 0 0;border-left:4px solid #3846ff;padding:8px 12px;color:#cfd2ff;background:#12142a;border-radius:8px}
-.card{background:var(--card);border:1px solid var(--line);padding:12px;border-radius:12px}
-#radar{width:100%;max-width:560px;height:auto;display:block;margin:10px auto}
-label.slider{display:block;margin:12px 0}
-label.slider .v{float:right;color:#aab}
+.wrap{max-width:820px;margin:0 auto;padding:16px}
+
+/* header 儀式感 */
+.header{padding:28px 16px 12px;background:
+  radial-gradient(1200px 300px at 20% -50%,#8f7cff33,transparent 60%),
+  radial-gradient(1200px 300px at 80% -60%,#5b2cff44,transparent 60%),
+  linear-gradient(180deg,#5b2cff,#3e2aa3);}
+.header h1{margin:0 0 10px;font-weight:900;background:linear-gradient(90deg,#fff,#d7c9ff);
+  -webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:.5px}
+.badge{display:inline-block;background:#0004;color:#fff;border:1px solid #fff3;border-radius:999px;padding:4px 12px;margin:4px 8px 0 0;font-size:12px}
+
+/* 卡片 */
+.section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 14px;margin:14px 0;box-shadow:0 6px 16px #0008}
+.row{display:flex;align-items:center;gap:10px}
+.btn{background:var(--brand);color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:700}
+.btn.secondary{background:#2c2e4d}
+.btn.ghost{background:transparent;border:1px solid var(--line)}
+.kv{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--chip);border:1px solid var(--line);padding:4px 10px;border-radius:999px;font-size:12px}
+
+label.slider{display:block;margin:12px 4px}
 input[type=range]{width:100%}
-.ok{color:var(--ok)} .warn{color:var(--warn)}
-.oracle{white-space:pre-wrap}
-.footer{color:var(--muted);font-size:12px;text-align:center;margin:18px 0 40px}
+.grid{display:grid;gap:10px}
+.grid.qs{grid-template-columns:repeat(1,1fr)}
+@media(min-width:600px){.grid.qs{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:820px){.grid.qs{grid-template-columns:repeat(2,1fr)}}
+.meta{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-top:6px}
+.progress{height:10px;background:#0f1020;border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.progress>span{display:block;height:100%;background:linear-gradient(90deg,#7b61ff,#b998ff)}
+.cardRow{display:flex;align-items:center;gap:12px;margin-top:10px}
+
+/* 解鎖動畫 */
+.lockWrap{position:relative;width:66px;height:66px;border-radius:50%;background:#0f1020;border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
+.lock{width:28px;height:28px;border-radius:6px;background:#2e3157;position:relative;box-shadow:inset 0 -2px 0 #0006}
+.lock:before{content:"";position:absolute;left:50%;top:-12px;transform:translateX(-50%);width:20px;height:16px;border:3px solid #2e3157;border-bottom:none;border-radius:10px 10px 0 0}
+.lock.unlocked{background:#3bd181;box-shadow:0 0 20px 6px #3bd18188,inset 0 -2px 0 #0006}
+.lock.unlocked:before{border-color:#3bd181}
+.lockWrap .flash{position:absolute;inset:-6px;border-radius:50%;box-shadow:0 0 24px 6px #3bd18166;opacity:0;pointer-events:none}
+.lockWrap.unlocked .flash{animation:flash 1.1s ease forwards}
+@keyframes flash{0%{opacity:0}40%{opacity:1}100%{opacity:.12}}
+
+.kpi{font-weight:800}
+.center{display:flex;align-items:center;gap:10px}
+
+/* modal */
+.modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;padding:20px;z-index:20}
+.modal.show{display:flex}
+.modal .card{max-width:560px;background:var(--card2);border:1px solid var(--line);border-radius:16px;padding:18px}
+.card h3{margin:0 0 8px}
+hr{border:0;border-top:1px solid var(--line);margin:12px 0}
+
+/* radar */
+#radar{width:100%;max-width:520px;height:auto;display:block;margin:0 auto}
+.legend{color:var(--muted);font-size:13px;margin-top:6px;text-align:center}
+
+footer{opacity:.6;text-align:center;padding:40px 0 24px}
+.warn{color:var(--warn)} .ok{color:var(--ok)} .bad{color:var(--bad)}
 </style>
 </head>
 <body>
-<header class="header">
+
+<div class="header">
   <div class="wrap">
     <h1>Enervi7</h1>
+    <div class="small">單檔內嵌：14 題量表＋SVG 雷達＋七階資訊卡＋旅程進度（7/21/30）＋解鎖動畫＋呢喃神諭（44）＋隱藏靈魂卡（33）＋YL 複方（60+）</div>
     <div class="kv">
       <span class="badge">離線可用</span>
       <span class="badge">不依賴外部 CDN</span>
       <span class="badge">單檔部署</span>
     </div>
   </div>
-</header>
+</div>
 
-<main class="wrap">
-  <section class="section">
+<div class="wrap">
+  <!-- 旅程進度 -->
+  <div class="section">
     <h2>🌀 旅程進度</h2>
+
     <div class="grid">
-      <div class="card">
-        <div class="kpi">7 日能量挑戰</div>
-        <div class="progress"><span id="p7"></span></div>
-        <div class="row" style="margin-top:10px">
-          <small class="small"><span id="t7"></span></small>
-          <button class="btn" id="btn7">完成今日打卡</button>
-          <div id="lock7" class="lock" title="連續 7 日解鎖">
-            <svg width="28" height="36" viewBox="0 0 24 24" fill="none" stroke="#9aa3ff" stroke-width="2"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><rect x="5" y="10" width="14" height="10" rx="2" ry="2"/></svg>
+      <!-- 7 -->
+      <div class="section" style="background:#121327;border-color:#262747">
+        <div class="row" style="justify-content:space-between">
+          <div>
+            <div class="kpi">7 日能量挑戰</div>
+            <div class="progress"><span id="p7" style="width:0%"></span></div>
+            <div class="meta"><span id="t7">0 / 7 天</span><span class="small">每日只能打卡一次</span></div>
+          </div>
+          <div class="cardRow">
+            <button class="btn" id="check7">完成今日打卡</button>
+            <div class="lockWrap" id="lock7"><div class="flash"></div><div class="lock" aria-label="lock 7"></div></div>
           </div>
         </div>
       </div>
-      <div class="card">
-        <div class="kpi">21 日靈魂轉化</div>
-        <div class="progress"><span id="p21"></span></div>
-        <div class="row" style="margin-top:10px">
-          <small class="small"><span id="t21"></span></small>
-          <button class="btn" id="btn21">完成今日打卡</button>
-          <div id="lock21" class="lock" title="連續 21 日解鎖">
-            <svg width="28" height="36" viewBox="0 0 24 24" fill="none" stroke="#9aa3ff" stroke-width="2"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><rect x="5" y="10" width="14" height="10" rx="2" ry="2"/></svg>
+      <!-- 21 -->
+      <div class="section" style="background:#121327;border-color:#262747">
+        <div class="row" style="justify-content:space-between">
+          <div>
+            <div class="kpi">21 日靈魂轉化</div>
+            <div class="progress"><span id="p21" style="width:0%"></span></div>
+            <div class="meta"><span id="t21">0 / 21 天</span><span class="small">每滿週期解鎖一張卡</span></div>
+          </div>
+          <div class="cardRow">
+            <button class="btn" id="check21">完成今日打卡</button>
+            <div class="lockWrap" id="lock21"><div class="flash"></div><div class="lock" aria-label="lock 21"></div></div>
           </div>
         </div>
       </div>
-      <div class="card">
-        <div class="kpi">30 日顯化日記</div>
-        <div class="progress"><span id="p30"></span></div>
-        <div class="row" style="margin-top:10px">
-          <small class="small"><span id="t30"></span></small>
-          <button class="btn" id="btn30">完成今日打卡</button>
-          <div id="lock30" class="lock" title="連續 30 日解鎖">
-            <svg width="28" height="36" viewBox="0 0 24 24" fill="none" stroke="#9aa3ff" stroke-width="2"><path d="M7 10V7a5 5 0 0 1 10 0v3"/><rect x="5" y="10" width="14" height="10" rx="2" ry="2"/></svg>
+      <!-- 30 -->
+      <div class="section" style="background:#121327;border-color:#262747">
+        <div class="row" style="justify-content:space-between">
+          <div>
+            <div class="kpi">30 日顯化日記</div>
+            <div class="progress"><span id="p30" style="width:0%"></span></div>
+            <div class="meta"><span id="t30">0 / 30 天</span><span class="small">最後解鎖「靈魂總結卡」</span></div>
+          </div>
+          <div class="cardRow">
+            <button class="btn" id="check30">完成今日打卡</button>
+            <div class="lockWrap" id="lock30"><div class="flash"></div><div class="lock" aria-label="lock 30"></div></div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
 
-  <section class="section">
+  <!-- 量表 -->
+  <div class="section">
     <h2>🧭 14 題量表（0–10）</h2>
-    <div id="qs"></div>
-    <div class="row">
-      <button id="genRadar" class="btn">生成能量圖</button>
-      <small class="small">目前平均分會反映到下方資訊卡。</small>
+    <div class="small">0 = 完全不符合 / 10 = 非常符合</div>
+    <div id="qs" class="grid qs"></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn" id="genRadar">生成能量圖</button>
+      <span class="small">目前平均分會反映到下方資訊卡。</span>
     </div>
-  </section>
+  </div>
 
-  <section class="section">
+  <!-- 雷達 -->
+  <div class="section">
     <h2>📈 能量雷達圖</h2>
-    <svg id="radar" viewBox="0 0 420 420"></svg>
-  </section>
+    <svg id="radar" viewBox="0 0 420 420" role="img" aria-label="能量雷達圖"></svg>
+    <div id="radarLegend" class="legend"></div>
+  </div>
 
-  <section class="section">
-    <h2>📜 呢喃神諭（Whispering Oracle）</h2>
+  <!-- 神諭 -->
+  <div class="section">
+    <h2>🪶 呢喃神諭（Whispering Oracle）</h2>
     <div id="oracleBox" class="oracle"></div>
     <div class="row" style="margin-top:8px">
       <button id="drawOracle" class="btn secondary">抽一張</button>
-      <small class="small">同一天僅顯示一張；隔天自動刷新。</small>
+      <div class="small">同一天僅顯示一張；隔天自動刷新。</div>
     </div>
-  </section>
+  </div>
 
-  <section class="section">
+  <!-- 精油 -->
+  <div class="section">
     <h2>🪔 今日建議精油</h2>
-    <div id="oilBox" class="small">請先完成量表並產出雷達圖。</div>
+    <div id="oilBox" class="small">請先完成量表並生成雷達圖，系統會依最低兩階推薦 1–2 款。</div>
     <div class="row" style="margin-top:8px">
       <button id="swapOil" class="btn secondary">換一款（示意）</button>
-      <small class="small">顯示：英文名稱（官方中文）＋能量描述。</small>
+      <div class="small">顯示：英文名稱（官方中文）＋能量描述。</div>
     </div>
-  </section>
+  </div>
 
-  <section class="section">
+  <!-- 七階 -->
+  <div class="section">
     <h2>🌈 七階資訊卡（自動展開最低兩階）</h2>
-    <div id="infoCards"></div>
-  </section>
+    <div id="stageCards"></div>
+  </div>
 
-  <p class="footer">© Enervi7 — 單檔離線版</p>
-</main>
+  <footer class="small">
+    © Enervi7 — 單檔版（本地儲存：量表分數、旅程進度、每日神諭與打卡）。清除瀏覽器資料即可重置。
+  </footer>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="modal" aria-hidden="true">
+  <div class="card">
+    <h3 id="modalTitle">提示</h3>
+    <div id="modalBody" class="small"></div>
+    <div class="row" style="justify-content:flex-end;margin-top:8px">
+      <button class="btn" id="modalOK">關閉</button>
+    </div>
+  </div>
+</div>
 
 <script>
-/* ===================== 問卷題目（14 題 × 7 階） ===================== */
-const PHASES = [
-  { key:'白', title:'能量覺知',  k:['覺知當下','辨識情緒','看見模式','誠實面對'],
-    act:['寫三句「此刻我真實的感受是…」','3 分鐘腹式呼吸（4-4-6）並記錄身體感受','列出 1 個反覆出現的念頭，標記：是事實還是解讀？'] },
-  { key:'藍', title:'穩定與淨化', k:['穩定','釋放','界線','沉澱'],
-    act:['寫下最困擾你的 1 件事，標註可控／不可控','5 分鐘靜坐，專注呼吸','清理一個小角落／檔案夾'] },
-  { key:'橙', title:'能量流動',   k:['專注','回饋循環','韌性','迭代'],
-    act:['把卡點→調整 1 個微策略（A/B 嘗試）','25 分鐘番茄鐘全程專注','記錄 1 個有效回饋，明天沿用'] },
-  { key:'黃', title:'內在力量',   k:['自信','邊界','選擇權','行動意志'],
-    act:['完成一件 10 分鐘可達成的小事','設定今日 3 件 MIT','把一項目標拆成可驗證步驟'] },
-  { key:'綠', title:'共振與連結', k:['連結','價值感','貢獻','擴散'],
-    act:['分享一個小成果或洞見到社群／朋友','邀請 1 人給具體回饋（3 句具體描述）','主動建立一個合作可能（發出一則邀請）'] },
-  { key:'藍藍', title:'意識擴展', k:['視野','直覺','洞見','學習'],
-    act:['今天閱讀 10 分鐘並記 3 句重點','把一個問題寫成 2 種假說','觀察一個日常模式並命名它'] },
-  { key:'紫', title:'靈魂整合',  k:['總結經驗','固化習慣','結構化','長期化'],
-    act:['用 5 句話摘要本週 3 件學到＋1 改進','把有效步驟寫成 Checklist 並固定到行程','為下個週期設定一個可衡量指標（KPI）'] }
+/* =============== 工具 =============== */
+const $ = (q,root=document)=>root.querySelector(q);
+const $$ = (q,root=document)=>Array.from(root.querySelectorAll(q));
+const todayStr = ()=> new Date().toISOString().slice(0,10);
+const read = (k,def)=>{ try{ return JSON.parse(localStorage.getItem(k)) ?? def }catch{ return def } };
+const write = (k,v)=>localStorage.setItem(k,JSON.stringify(v));
+const toast = (title,html)=>{ $("#modalTitle").textContent = title; $("#modalBody").innerHTML = html; $("#modal").classList.add("show"); };
+$("#modalOK").onclick=()=>$("#modal").classList.remove("show");
+
+/* =============== 七階結構 =============== */
+const STAGES = [
+ {key:"S1", name:"白｜能量覺知", color:"#ffffff", keywords:["覺知當下","辨識情緒","看見模式","誠實面對"],
+  actions:["寫三句『此刻我真實的感受是…』","3 分鐘腹式呼吸（4-4-6），記錄身體感受","列出 1 個反覆出現的念頭：是事實還是解讀？"]},
+ {key:"S2", name:"藍｜穩定與淨化", color:"#87a8ff", keywords:["鬆綁負荷","情緒代謝","放下執著","完成回收"],
+  actions:["寫了就撕（釋放書寫）2–3 段","身體掃描，對緊繃部位做 60 秒放鬆","完成一件拖延小事並打勾"]},
+ {key:"S3", name:"橙｜能量流動", color:"#ffb86b", keywords:["允許發生","對齊意圖","資源感","安全感"],
+  actions:["用『我允許…』造句 3 句（對應今日焦點）","回顧一次被支持的證據，寫下為何可複製","今天主動請求一次幫助（小範圍即可）"]},
+ {key:"S4", name:"黃｜內在力量", color:"#ffd86b", keywords:["最小步驟","可驗證","節奏","執行力"],
+  actions:["把目標拆成 10 分鐘的一步，現在就做","設定今日 3 件 MIT","完成後公開回報給可信任對象"]},
+ {key:"S5", name:"綠｜共振與連結", color:"#7dffb0", keywords:["專注","回饋循環","韌性","迭代"],
+  actions:["卡點→調整 1 個微策略（A/B）","25 分鐘番茄鐘全程專注","記錄 1 個有效回饋，明天沿用"]},
+ {key:"S6", name:"靛藍｜意識擴展", color:"#7fa3ff", keywords:["連結","價值感","貢獻","擴散"],
+  actions:["分享一個小成果/洞見至社群","邀請 1 人給具體回饋（3 句具體）","主動建立一個合作可能（發一則邀請）"]},
+ {key:"S7", name:"紫｜靈魂整合", color:"#caa7ff", keywords:["總結經驗","固化習慣","結構化","長期化"],
+  actions:["用 5 句話摘要本週 3 件學到＋1 改進","把有效步驟寫成 Checklist 並固定到行程","為下個週期設定一個可衡量指標（KPI）"]}
 ];
+// 瓶頸轉換（臨界）
+const TRANSITIONS = {
+ "S1->S2":["把『我觀察到…』改寫成『我願意放下…』×3","情緒書寫→身體放鬆收尾（頸肩/腹部）"],
+ "S2->S3":["列出 3 個現有資源（人/物/技能）","寫一段：若一切對我有利，今天我允許什麼？"],
+ "S3->S4":["產出『最小可行步驟』並在 10 分鐘內啟動","預約一個行動時段，行前只做準備清單"],
+ "S4->S5":["把今日行動回饋記錄並做 1 次微調","25 分鐘專注儀式，結束回顧 2 分鐘"],
+ "S5->S6":["公開分享 1 個進展/案例，索取具體回饋","辨識最被共鳴的價值，明天主打該元素"],
+ "S6->S7":["把有效做法寫成 SOP/Checklist","選一個可持續節奏（週/月）放進行事曆"],
+ "S7->S1":["本週回顧 3 句＋下一輪新意圖 1 句","挑選 1 個欲精進的指標，設置觀測方式"]
+};
+
+/* =============== 14 題題庫（每階 2 題） =============== */
 const QUESTIONS = [
-  '我能清楚覺察自己此刻的身心狀態。','我能在混亂時，迅速把注意力帶回當下。',
-  '面對壓力或衝突時，我能保持冷靜不失衡。','我能有效地釋放累積的負面情緒與雜念。',
-  '我常感覺靈感／情感在體內自然流動。','遇到阻礙時，我能做出小幅度且持續的調整。',
-  '我能信任自己的判斷，並持續做出選擇。','遇到挑戰，我仍能相信自己並往前一步。',
-  '我能真誠表達，也樂於傾聽他人。','我能感到自己與他人、與世界是連結的。',
-  '我能任直覺，且能從中獲得有用的指引。','我能從日常事件看見更深的洞見與意義。',
-  '我能把過去的經驗整合成力量，而不是枷鎖。','我常感到自己完整，對生命方向踏實安心。'
+ {s:"S1", text:"我能清楚覺察自己此刻的身心狀態。"},
+ {s:"S1", text:"我能在混亂時，迅速把注意力帶回當下。"},
+ {s:"S2", text:"面對壓力或衝突時，我能保持冷靜不失衡。"},
+ {s:"S2", text:"我能有效地釋放累積的負面情緒與雜念。"},
+ {s:"S3", text:"我常感覺靈感/情感在體內自然流動。"},
+ {s:"S3", text:"我能允許事情以最合適的方式發生。"},
+ {s:"S4", text:"我能把目標拆解成最小可行步驟並立即啟動。"},
+ {s:"S4", text:"我有穩定節奏與執行力，能堅持完成。"},
+ {s:"S5", text:"我能在回饋中快速調整，維持專注韌性。"},
+ {s:"S5", text:"我能把有效的小改動累積成可複製的流程。"},
+ {s:"S6", text:"我能感受到自己與他人、與世界的連結。"},
+ {s:"S6", text:"我願意公開分享並索取具體回饋。"},
+ {s:"S7", text:"我能把過去的經驗整合成力量，而不是枷鎖。"},
+ {s:"S7", text:"我常感到自己完整，對生命方向踏實安心。"}
 ];
-/* 產生題目 */
-const qsBox = document.getElementById('qs');
-const SLIDE_IDS = [];
-(function renderQs(){
-  PHASES.forEach((ph,pi)=>{
-    for(let j=0;j<2;j++){
-      const i = pi*2+j;
-      const id = 'q'+i;
-      SLIDE_IDS.push(id);
-      const lab = document.createElement('label'); lab.className='slider';
-      lab.innerHTML = `<strong>${pi+1+j===0?1:i+1}. ${ph.key}｜${ph.title}</strong> ${QUESTIONS[i]} <span class="v">目前：<b id="${id}_v">5</b> / 10</span>
-      <input id="${id}" type="range" min="0" max="10" step="1" value="5"/>`;
-      qsBox.appendChild(lab);
+
+/* =============== 問卷渲染 =============== */
+function renderQuestions(){
+  const host=$("#qs"); host.innerHTML="";
+  QUESTIONS.forEach((q,i)=>{
+    const id="q"+i;
+    const last = read("scores",[])[i] ?? 5;
+    const el=document.createElement("div");
+    el.innerHTML=`
+      <label class="slider">
+        <div class="small"><b>${(i+1)}. ${STAGES.find(s=>s.key===q.s).name}</b>｜${q.text}</div>
+        <input type="range" min="0" max="10" step="1" value="${last}" id="${id}" />
+        <div class="meta"><span>目前：<span id="v${id}">${last}</span> / 10</span></div>
+      </label>`;
+    host.appendChild(el);
+    const r=$("#"+id), vv=$("#v"+id);
+    r.oninput=()=>vv.textContent=r.value;
+  });
+}
+renderQuestions();
+
+/* =============== 存取分數、雷達 =============== */
+function getStageAverages(vals){
+  const sum={S1:[],S2:[],S3:[],S4:[],S5:[],S6:[],S7:[]};
+  QUESTIONS.forEach((q,i)=>sum[q.s].push(vals[i]));
+  const avg=Object.fromEntries(Object.entries(sum).map(([k,a])=>[k, a.reduce((p,c)=>p+c,0)/a.length]));
+  return avg;
+}
+function saveScores(vals){ write("scores", vals); }
+
+function drawRadar(vals){
+  const svg=$("#radar"); const size=420, cx=210, cy=210, r=160;
+  const axes=STAGES.map(s=>s.name.split("｜")[0]+"｜"+s.name.split("｜")[1]);
+  svg.innerHTML="";
+  for(let i=1;i<=4;i++){
+    const rr=r*i/4;
+    const poly=axes.map((_,idx)=>{
+      const ang=-Math.PI/2+2*Math.PI*idx/axes.length;
+      const x=cx+rr*Math.cos(ang), y=cy+rr*Math.sin(ang);
+      return `${x},${y}`;
+    }).join(" ");
+    const p=document.createElementNS("http://www.w3.org/2000/svg","polygon");
+    p.setAttribute("points",poly); p.setAttribute("fill","none"); p.setAttribute("stroke","#2a2b40"); p.setAttribute("stroke-width","1");
+    svg.appendChild(p);
+  }
+  axes.forEach((label,idx)=>{
+    const ang=-Math.PI/2+2*Math.PI*idx/axes.length;
+    const x=cx+r*Math.cos(ang), y=cy+r*Math.sin(ang);
+    const l=document.createElementNS("http://www.w3.org/2000/svg","line");
+    l.setAttribute("x1",cx); l.setAttribute("y1",cy); l.setAttribute("x2",x); l.setAttribute("y2",y);
+    l.setAttribute("stroke","#2a2b40"); svg.appendChild(l);
+    const t=document.createElementNS("http://www.w3.org/2000/svg","text");
+    t.setAttribute("x",cx+(r+18)*Math.cos(ang)); t.setAttribute("y",cy+(r+18)*Math.sin(ang)); t.setAttribute("fill","#a9a9c5"); t.setAttribute("font-size","12");
+    t.setAttribute("text-anchor", Math.cos(ang)>0.1?"start":(Math.cos(ang)<-0.1?"end":"middle")); t.textContent=label; svg.appendChild(t);
+  });
+  const axesKeys=STAGES.map(s=>s.key);
+  const pts=axesKeys.map((k,idx)=>{
+    const v=vals[k]; const rr=r*(v/10);
+    const ang=-Math.PI/2+2*Math.PI*idx/axesKeys.length;
+    const x=cx+rr*Math.cos(ang), y=cy+rr*Math.sin(ang);
+    return `${x},${y}`;
+  }).join(" ");
+  const area=document.createElementNS("http://www.w3.org/2000/svg","polygon");
+  area.setAttribute("points",pts); area.setAttribute("fill","#7b61ff55"); area.setAttribute("stroke","#b998ff"); area.setAttribute("stroke-width","2");
+  svg.appendChild(area);
+  $("#radarLegend").textContent = STAGES.map(s=>`${s.name.split("｜")[0]}｜${s.name.split("｜")[1]}：${(vals[s.key]).toFixed(1)}`).join(" ｜ ");
+}
+
+/* =============== 七階資訊卡 =============== */
+function renderStageCards(av){
+  const order = Object.entries(av).sort((a,b)=>a[1]-b[1]); // asc
+  const lowest2 = order.slice(0,2).map(([k])=>k);
+  const host=$("#stageCards"); host.innerHTML="";
+  STAGES.forEach(st=>{
+    const open = lowest2.includes(st.key);
+    const box=document.createElement("div");
+    box.className="section"; box.style.background="#121327";
+    box.innerHTML=`
+      <div class="row" style="justify-content:space-between;cursor:pointer" data-key="${st.key}">
+        <div><b>${st.name}</b> ｜ 平均 <b>${(av[st.key]).toFixed(1)}</b> 分 ${open?'<span class="chip" style="background:#2b214d;border:1px solid #493a88">最低</span>':''}</div>
+        <div class="small">點擊展開/收合</div>
+      </div>
+      <div class="small" style="margin-top:8px;display:${open?'block':'none'}" id="body-${st.key}">
+        <div class="kv">${st.keywords.map(k=>`<span class="chip">${k}</span>`).join("")}</div>
+        <h3>行動建議</h3>
+        <ul>${st.actions.map(a=>`<li>${a}</li>`).join("")}</ul>
+        <h3>瓶頸轉換（臨界）</h3>
+        <ul>${(TRANSITIONS[`${st.key}->S${((parseInt(st.key.slice(1))+1-1)%7)+1}`]||[]).map(x=>`<li>${x}</li>`).join("")}</ul>
+      </div>`;
+    host.appendChild(box);
+    box.querySelector("[data-key]").onclick=()=>{
+      const b = $("#body-"+st.key); b.style.display = (b.style.display==="none")?"block":"none";
     }
   });
-  SLIDE_IDS.forEach(id=>{
-    const el = document.getElementById(id), v=document.getElementById(id+'_v');
-    el.addEventListener('input',()=>v.textContent=el.value);
-  });
-})();
-
-/* ===================== Radar (SVG) ===================== */
-function drawRadar(vals){
-  const svg = document.getElementById('radar'); svg.innerHTML='';
-  const cx=210, cy=210, r=160, n=7;
-  function polar(a,m){ return [cx + Math.sin(a)*m, cy - Math.cos(a)*m]; }
-  // grid
-  for(let k=1;k<=4;k++){
-    const m=r*k/4; const p=[]; for(let i=0;i<n;i++){const a=i*2*Math.PI/n; p.push(polar(a,m));}
-    const d='M'+p.map(x=>x.join(',')).join('L')+'Z';
-    const g=document.createElementNS('http://www.w3.org/2000/svg','path');
-    g.setAttribute('d',d); g.setAttribute('fill','none'); g.setAttribute('stroke','#2b2e44'); g.setAttribute('stroke-width','1');
-    svg.appendChild(g);
-  }
-  // axis + labels
-  PHASES.forEach((ph,i)=>{
-    const a=i*2*Math.PI/7; const [x,y]=polar(a,r);
-    const ax=document.createElementNS('http://www.w3.org/2000/svg','line');
-    ax.setAttribute('x1',cx); ax.setAttribute('y1',cy); ax.setAttribute('x2',x); ax.setAttribute('y2',y);
-    ax.setAttribute('stroke','#2b2e44'); ax.setAttribute('stroke-width','1'); svg.appendChild(ax);
-    const lb=document.createElementNS('http://www.w3.org/2000/svg','text');
-    lb.setAttribute('x',x); lb.setAttribute('y',y); lb.setAttribute('fill','#a9a9bb'); lb.setAttribute('font-size','12');
-    lb.setAttribute('text-anchor','middle'); lb.textContent=ph.key+'｜'+ph.title; svg.appendChild(lb);
-  });
-  // area
-  const max=10; const ps=[];
-  for(let i=0;i<7;i++){
-    const a=i*2*Math.PI/7; const m=r*(vals[i]/max); ps.push(polar(a,m));
-  }
-  const d='M'+ps.map(p=>p.join(',')).join('L')+'Z';
-  const area=document.createElementNS('http://www.w3.org/2000/svg','path');
-  area.setAttribute('d',d); area.setAttribute('fill','rgba(138,107,255,.28)'); area.setAttribute('stroke','#8a6bff'); area.setAttribute('stroke-width','2');
-  svg.appendChild(area);
 }
 
-/* ===================== 七階資訊卡 ===================== */
-function renderInfoCards(vals){
-  const box=document.getElementById('infoCards');
-  const withAvg = PHASES.map((p,i)=>({i,avg:(vals[i*2]+vals[i*2+1])/2}));
-  const sorted=[...withAvg].sort((a,b)=>a.avg-b.avg).slice(0,2).map(x=>x.i);
-  box.innerHTML = sorted.map(i=>{
-    const ph=PHASES[i];
-    return `<div class="card" style="margin:10px 0">
-      <div class="kpi">${ph.key}｜${ph.title}｜平均 <b>${((vals[i*2]+vals[i*2+1])/2).toFixed(1)}</b> 分</div>
-      <div class="small">關鍵字： ${ph.k.map(t=>`<span class="badge" style="padding:4px 10px;background:#191b2b;border-color:#2b2e44">${t}</span>`).join(' ')}</div>
-      <h3 style="margin:10px 0 6px;font-size:16px">行動建議</h3>
-      <ul style="margin:0 0 4px 18px;padding:0">${ph.act.map(t=>`<li>${t}</li>`).join('')}</ul>
-    </div>`;
-  }).join('');
-}
-
-/* ===================== 分數計算 & 本地保存 ===================== */
-function collectVals(){
-  return SLIDE_IDS.map(id=>+document.getElementById(id).value);
-}
-function toPhaseMeans(raw){ // 14 -> 7 averages
-  return PHASES.map((_,i)=> (raw[i*2]+raw[i*2+1])/2 );
-}
-function saveScores(raw){
-  localStorage.setItem('enervi7_scores', JSON.stringify({t:Date.now(), raw}));
-}
-function loadLastScores(){
-  try{ const o = JSON.parse(localStorage.getItem('enervi7_scores')||'{}'); return Array.isArray(o.raw)?o.raw:[]; }catch(e){return [];}
-}
-
-/* ===================== Oracle（每日一張） ===================== */
-const ORACLE = [
-  {t:'歸來', p:'你走過萬里，原來一直都在這裡。', a:'今天，對自己說：我已經回來了。'},
-  {t:'成為', p:'你沒有變得更好，只是變得更真。', a:'允許自己出現，哪怕只是 1 分鐘。'},
-  {t:'容納', p:'你不是湖面，而是湖。', a:'當情緒來時，請為它留一把椅子。'},
-  {t:'看見', p:'看見就已改變。', a:'把當下最明亮的 1 件事寫下來。'},
-  {t:'交托', p:'不是交給誰，而是交回給生命。', a:'今天練習放手 1 件微小之事。'},
-  {t:'重生', p:'每次呼吸都是新的。', a:'做 10 次慢吸慢吐，說：我願意開始。'},
-  {t:'熄燈', p:'讓舞台暗下，才能看見星光。', a:'今晚提早 30 分鐘休息。'},
-  {t:'點燈', p:'你就是火苗。', a:'點一盞小燈，為自己祈願。'},
-  {t:'合一', p:'你以為的缺口，是通往宇宙的門。', a:'今天對自己說：我足夠了。'},
-  {t:'微笑', p:'請把臉朝向光。', a:'對路上的人送出 1 次微笑。'},
-  {t:'深根', p:'你不必抓緊，因為你已經連結。', a:'赤腳站立 60 秒，感覺腳底的地心。'},
-  {t:'回響', p:'宇宙總會回信。', a:'寫下你今天收過的 1 份回饋。'},
-  {t:'信步', p:'先走一步，路便出現。', a:'完成一件 5–10 分鐘的微行動。'},
-  {t:'軟化', p:'越柔軟，越有力。', a:'用更溫柔的語氣對自己說話。'},
-  {t:'清明', p:'清明不是空白，是清澈。', a:'喝一杯白開水，深呼吸 3 次。'},
-  {t:'初心', p:'不是回到起點，而是記起光。', a:'今天做一件你曾熱愛的小事。'},
-  {t:'邀請', p:'當你願意，世界會靠近。', a:'向 1 人發出真誠的邀請。'},
-  {t:'停駐', p:'停下，也是一種前進。', a:'把手機放下 10 分鐘，單純坐著。'},
-  {t:'鏡湖', p:'世界是你的映照。', a:'觀察一個觸發點，只寫觀察不下結論。'},
-  {t:'承載', p:'你承載得起你的願望。', a:'寫下你想承接的 1 份禮物。'},
-  {t:'滋長', p:'溫柔照料，便會長大。', a:'澆一盆植物／照顧自己 5 分鐘。'},
-  {t:'相逢', p:'靈魂與靈魂總有暗號。', a:'寫信給未來的自己（1 句）。'},
-  {t:'定星', p:'請把視線放到更遠的地方。', a:'寫下 1 個最重要的方向。'},
-  {t:'破曉', p:'黑暗從來不是對立，只是循環。', a:'晨起拉開窗簾，迎接今日第一道光。'},
-  {t:'守候', p:'願你的等待有回聲。', a:'把一件想做的事排在日曆上。'},
-  {t:'提燈', p:'你也是別人的光。', a:'分享一個小小的有用訊息。'},
-  {t:'聚焦', p:'一束光，可以穿透。', a:'今天只做 3 件最重要的事。'},
-  {t:'綻放', p:'請允許自己被看見。', a:'發布一件完成品，哪怕不完美。'},
-  {t:'呼應', p:'你給出的，會回到你身上。', a:'說一聲謝謝，並感受它。'},
-  {t:'無名', p:'在還需要名字之前，你已經是光。', a:'靜默 60 秒，讓自己被看見。'},
-  {t:'羽化', p:'不是離開，而是展翼。', a:'今天走出門，多走 500 步。'},
-  {t:'守護', p:'你一直被看顧。', a:'擁抱自己 10 秒鐘。'},
-  {t:'踏浪', p:'害怕也能前進。', a:'完成 1 件你有點怕的事（很小也可以）。'},
-  {t:'溪流', p:'讓它流過，你就自由。', a:'寫下你願意放下的 1 件事。'},
-  {t:'聆聽', p:'答案在靜默裡。', a:'今天給自己 5 分鐘安靜。'},
-  {t:'開門', p:'門從來都在。', a:'對世界說：我準備好了。'},
-  {t:'修復', p:'裂縫會長出花。', a:'列一件你已經做得不錯的事情。'},
-  {t:'回家', p:'回到身體，回到心裡。', a:'做 1 分鐘身體掃描。'},
-  {t:'流光', p:'時間是朋友。', a:'整理相簿，挑 1 張讓你溫暖的照片。'},
-  {t:'專注', p:'專注使光變成雷射。', a:'本日一個 25 分鐘番茄鐘。'},
-  {t:'感恩', p:'萬物皆回饋。', a:'寫下今天值得感謝的 3 件事。'},
-  {t:'信任', p:'請信任正在發生的一切。', a:'告訴自己：我被支持。'},
-  {t:'自由', p:'自由不是沒有邊界，而是內在有選擇。', a:'對一件事說「我選擇」。'}
-]; // 44
-
-/* ===================== 隱藏靈魂卡（33） ===================== */
-const HIDDEN_CARDS = [
-  {t:'無名之光', p:'在你還需要名字之前，你已經是光。', a:'今天，靜默 60 秒，讓自己被看見。'},
-  {t:'湖心', p:'越靠近中央，越安靜。', a:'用 3 次深呼吸回到中心。'},
-  {t:'山脈', p:'你的穩定讓世界安心。', a:'挺直背脊行走 1 分鐘。'},
-  {t:'海潮', p:'來去自如的力量。', a:'用 30 秒觀察吸氣與吐氣的潮汐。'},
-  {t:'火種', p:'你內在仍然溫熱。', a:'完成最小的那一步。'},
-  {t:'星圖', p:'你在尋路，也在畫路。', a:'把今日方向寫成一句話。'},
-  {t:'窗',  p:'打開，就有風。', a:'打開窗戶 20 秒，換氣。'},
-  {t:'橋',  p:'連結不是擁有，是通行。', a:'主動發出一個問候。'},
-  {t:'石',  p:'沉著讓你擁有重量。', a:'今天說話比平常慢一點。'},
-  {t:'雨',  p:'允許，便是滋養。', a:'喝一杯水，感覺它進入身體。'},
-  {t:'圓',  p:'終章亦是序章。', a:'寫下下一輪的意圖。'},
-  {t:'線',  p:'把鬆散的東西串起來。', a:'建立一個 checklist。'},
-  {t:'嶺',  p:'面向群峰，便知自己的位置。', a:'回顧 1 件收穫並致謝。'},
-  {t:'舟',  p:'你不必成為海，做一葉舟就好。', a:'把擔子卸下一小塊。'},
-  {t:'泉',  p:'清澈是你的天性。', a:'今天簡化一件事。'},
-  {t:'燈塔',p:'因為你在，別人不會迷路。', a:'分享一個你確定有用的資訊。'},
-  {t:'種子',p:'每一次休息都是發芽前的夜。', a:'今晚提早 15 分鐘睡覺。'},
-  {t:'羽',  p:'柔軟讓你飛得更遠。', a:'對自己說一句溫柔的話。'},
-  {t:'琴',  p:'別忘了調音。', a:'為明天設定 1 個可衡量的節奏。'},
-  {t:'路標',p:'你在路上，也是路標。', a:'把今天的 1 個洞見寫下並分享。'},
-  {t:'貝殼',p:'聽見海，也聽見自己。', a:'今天做一次內在聆聽。'},
-  {t:'花',  p:'盛開不是義務，是回應。', a:'完成 1 件讓你愉悅的小事。'},
-  {t:'鏡',  p:'你所見，皆是你。', a:'覺察一個投射並收回它。'},
-  {t:'鎖',  p:'門在心裡。鑰匙也在。', a:'把「我不能」改寫成「我正在學」。'},
-  {t:'雲',  p:'變化是常態。', a:'把焦點放在當下 60 秒。'},
-  {t:'軌道',p:'你的習慣正在塑形。', a:'固定一個微小的日常。'},
-  {t:'岸',  p:'記得靠岸。', a:'結束一天前做 2 分鐘回顧。'},
-  {t:'黎明',p:'請把希望寫進時間。', a:'明早第一件事，做 1 件最重要的事。'},
-  {t:'誓約',p:'你與自己有約。', a:'為自己立下一個善待自身的小約定。'},
-  {t:'青藤',p:'向著光生長。', a:'今天多待在自然 3 分鐘。'},
-  {t:'回聲',p:'你發出的終會回來。', a:'留下 1 句感謝。'},
-  {t:'旅人',p:'你不是漂泊，你在朝聖。', a:'為旅程畫下一個小記號。'},
-  {t:'歸所',p:'你永遠可以回家。', a:'把注意力帶回心口 10 秒。'}
+/* =============== 神諭（44） =============== */
+const ORACLE_CARDS = [
+ {t:"成為", m:"你沒有變得更好，只是變得更真。", a:"允許自己出現，哪怕只有 1 分鐘。"},
+ {t:"歸來", m:"你走過遠路，原來一直都在這裡。", a:"今天，對自己說：我已經回來了。"},
+ {t:"允許", m:"你不需要全懂，讓生命把你帶到答案。", a:"對一件事說：我允許它按最好的方式發生。"},
+ {t:"呼吸", m:"你的身體知道回家的路。", a:"做 60 秒腹式呼吸，陪伴胸口的起伏。"},
+ {t:"邊界", m:"善待自己，才有力氣善待世界。", a:"說一次『此刻我需要先照顧自己』。"},
+ {t:"信任", m:"你已被支持，只是你還沒看見。", a:"回想 1 次被幫助的瞬間，寫下可複製的要素。"},
+ {t:"微光", m:"你不必成為太陽，螢火也能照路。", a:"點亮一個小小進展，向自己報告。"},
+ {t:"收回", m:"把能量從無用戰場撤回，交給你在乎的事。", a:"今天少做一件不必要的應酬。"},
+ {t:"清明", m:"真相不吵，它只是站在那裡。", a:"寫 3 句『我其實在害怕…』。"},
+ {t:"感恩", m:"感恩讓豐盛看見你。", a:"列 3 筆金錢/資源的流入，說聲謝謝。"},
+ {t:"秩序", m:"秩序是溫柔的力量。", a:"把桌面/抽屜整理 5 分鐘。"},
+ {t:"相遇", m:"你所渴望的，也在找你。", a:"發出一則合作邀請。"},
+ {t:"節奏", m:"穩定不是速度，是能回來。", a:"設定 25 分鐘番茄鐘，結束回顧 2 分鐘。"},
+ {t:"界線", m:"清楚不是冷酷，是善待彼此。", a:"對一個請求說『我需要再想一想』。"},
+ {t:"回聲", m:"你給世界的，會以另一種形式回來。", a:"給某人真誠的三句肯定。"},
+ {t:"靜默", m:"安靜不是空白，是盛裝。", a:"今天 60 秒不說話，只聽身體的聲音。"},
+ {t:"整合", m:"碎片需要被看見，然後擁抱。", a:"寫 5 句本週學到的事＋1 改進。"},
+ {t:"方向", m:"不要追尋光，成為光。", a:"問自己：我想成為怎樣的人？寫 1 句。"},
+ {t:"接納", m:"接納讓鬆動發生。", a:"對一個不順心說：我接受它目前的樣子。"},
+ {t:"修復", m:"溫柔會讓世界慢慢長好。", a:"修補一直拖延的小東西/小承諾。"},
+ {t:"覺醒", m:"其實你早已準備好。", a:"今天踏出 1 步，哪怕很小。"},
+ {t:"看見", m:"真實總在最不起眼的角落。", a:"拍一張『讓我踏實』的照片。"},
+ {t:"鬆手", m:"不抓緊，才有空間拿到新的。", a:"丟掉 1 樣佔位但無用的東西。"},
+ {t:"回歸", m:"一路繞遠，是為了學會回家。", a:"把手機放下 10 分鐘，只與自己相處。"},
+ {t:"耐心", m:"生命以它的節奏前進。", a:"今天把一件事做慢一點。"},
+ {t:"邂逅", m:"驚喜只會在你出門時發生。", a:"去散步 10 分鐘，帶回 1 個小發現。"},
+ {t:"澄明", m:"雜訊退去，答案向你靠近。", a:"寫 5 句『我真正想要的是…』"},
+ {t:"祝福", m:"願一切都朝向你最高的益處發生。", a:"把祝福送給正在奮力的自己。"},
+ {t:"開始", m:"起點永遠在今天。", a:"給『遲到的計畫』一個 10 分鐘的開始。"},
+ {t:"火種", m:"熱情是靈魂的燃料。", a:"做一件讓你眼睛發亮的小事。"},
+ {t:"收束", m:"力氣要用在能推動的地方。", a:"今天說一次『先到這裡』。"},
+ {t:"溫柔", m:"請溫柔地對待正努力的你。", a:"抱抱自己或說：辛苦了。"},
+ {t:"回望", m:"你已經走很遠了。", a:"翻看舊紀錄，找 1 個可複製的成功要素。"},
+ {t:"選擇", m:"每一個對齊，都在創造你的未來。", a:"今天做 1 個更靠近心的選擇。"},
+ {t:"相愛", m:"讓愛先發生在自己身上。", a:"說出『我值得被愛』。"},
+ {t:"勇氣", m:"恐懼只是提醒：這裡有成長。", a:"把害怕的事拆成 1 步，立刻行動。"},
+ {t:"精準", m:"說重點，做重點。", a:"寫下今日唯一最重要的目標。"},
+ {t:"豐盛", m:"豐盛喜歡有出口的河流。", a:"付出 1 份善意或知識。"},
+ {t:"寬恕", m:"寬恕讓你自由。", a:"把『我願意放下…』寫 3 句。"},
+ {t:"清理", m:"清理是顯化的開始。", a:"丟 10 封信或 10 張照片。"},
+ {t:"祝賀", m:"肯定自己，是一種德行。", a:"為今天的小勝利慶祝。"},
+ {t:"安住", m:"先在自己心裡有家。", a:"用 3 句話描述你的心之屋。"}
 ];
 
-/* ===================== YL 複方（60+，含中文） ===================== */
+/* =============== 隱藏靈魂卡（33） =============== */
+const HIDDEN_CARDS = [
+ {t:"無名之光", m:"在你還需要名字之前，你已經是光。", a:"靜默 60 秒，讓自己被看見。"},
+ {t:"大地之心", m:"穩穩地，被托住。", a:"赤腳踩地 1 分鐘，向大地致意。"},
+ {t:"海之記憶", m:"潮起潮落，你仍完整。", a:"聽一段海聲或做波浪式呼吸。"},
+ {t:"天空之窗", m:"雲會散，視野仍在。", a:"看天 2 分鐘，讓眼與心一起放鬆。"},
+ {t:"種子密語", m:"向下生根，向上開花。", a:"把一個願望寫在紙上並收好。"},
+ {t:"黎明前", m:"黑並非終點，而是轉場。", a:"為明天準備 1 個小小開始。"},
+ {t:"旅人歌", m:"遠行者的家，在腳步之間。", a:"今天走一段不同的路。"},
+ {t:"山之盟約", m:"堅定不是僵硬，是清楚。", a:"說出 1 個不可妥協的核心價值。"},
+ {t:"火之眼", m:"熱情會指路。", a:"點燃一小段時間做你熱愛之事。"},
+ {t:"鏡湖", m:"靜時方能照見自己。", a:"寫 3 句『我正在成為…』"},
+ {t:"風的密函", m:"變動是祝福的另一個名字。", a:"今天試一件不同以往的小選擇。"},
+ {t:"守護羽", m:"你從不孤單。", a:"向一位看不見的支持致謝。"},
+ {t:"時刻之門", m:"當下是唯一進入口。", a:"一次專注無干擾的 10 分鐘。"},
+ {t:"銀線", m:"所有發生，彼此牽連。", a:"找出 1 條把今天和願望連起來的線。"},
+ {t:"雨的祝福", m:"滋養常以不便的樣貌到來。", a:"在不便裡說一次謝謝。"},
+ {t:"塵與光", m:"不完美與光同在。", a:"擁抱 1 個不完美並說：我接納它。"},
+ {t:"相逢", m:"你與自己久別重逢。", a:"對鏡微笑 10 秒。"},
+ {t:"回聲谷", m:"你發出的聲音，會回到你這裡。", a:"說 3 句善意給世界。"},
+ {t:"銀樹", m:"長成是時間與照顧的合唱。", a:"澆灌/整理 1 件正在長成的事。"},
+ {t:"祕徑", m:"少有人走，是因它屬於你。", a:"今天做 1 件『只屬於你』的小事。"},
+ {t:"初雪", m:"潔白不是空白，是重新。", a:"把一頁行程留白給自己。"},
+ {t:"航圖", m:"導航在你心裡。", a:"畫一張 3 步驟的航圖。"},
+ {t:"回航", m:"遠方是為了學會歸來。", a:"寫 1 句讓你回來的口令。"},
+ {t:"光井", m:"光會沿著你打開的縫進來。", a:"今天打開 1 個小縫。"},
+ {t:"晨星", m:"最亮時，不一定在白天。", a:"記下一個清晨念頭。"},
+ {t:"心燈", m:"你的心會照路。", a:"關心 1 個人，發一句訊息。"},
+ {t:"回到身體", m:"身體是你最老實的家。", a:"做 1 分鐘身體掃描。"},
+ {t:"靈感井", m:"靈感需要被汲取。", a:"寫 10 個不設限點子。"},
+ {t:"門楣", m:"替自己畫一扇門。", a:"寫下：什麼進來，什麼不進來。"},
+ {t:"河床", m:"讓能量有去處。", a:"安排 1 個固定輸出的小欄位。"},
+ {t:"祝禱", m:"願你所做的，皆有光同行。", a:"對今天的行動說一段祝禱。"},
+ {t:"靜觀", m:"看，然後再說。", a:"今天少評價，多觀察。"},
+ {t:"終章", m:"每個結束都在為開始讓路。", a:"為結束寫一句感謝。"}
+];
+
+/* =============== YL 複方（60+） =============== */
 const YL_BLENDS = [
-{name:"Peace & Calming", zh:"舒靜", d:"安撫情緒，帶來深層寧眠與內在平靜。"},
-{name:"Harmony", zh:"和諧（樂融）", d:"平衡身心能量，促進內在與關係的協調連結。"},
-{name:"Joy", zh:"喜悅", d:"喚醒內心喜悅與愛的頻率，帶來幸福感。"},
-{name:"Valor", zh:"勇氣", d:"支撐內在力量，幫助你跨越恐懼與挑戰。"},
-{name:"Abundance", zh:"豐盛", d:"提升顯化能量，吸引繁盛與豐裕。"},
-{name:"Forgiveness", zh:"寬恕", d:"釋放過去結，帶來心靈的自由與療癒。"},
-{name:"Stress Away", zh:"樂自在", d:"溫柔舒緩壓力，讓身心回歸自在。"},
-{name:"Dream Catcher", zh:"捕夢網", d:"開啟靈感與想像，支持夢境與直覺顯化。"},
-{name:"Sacred Mountain", zh:"聖山", d:"穩固如山的內在力量，帶來神聖守護感。"},
-{name:"White Angelica", zh:"白使者", d:"純淨守護能量，讓你感受到被愛與保護。"},
-{name:"Release", zh:"釋放", d:"溫柔釋放積累的情緒與壓力。"},
-{name:"En-R-Gee", zh:"覺醒能量", d:"喚醒身體動力與精神活力。"},
-{name:"Acceptance", zh:"接受", d:"擁抱當下，與現實和平相處。"},
-{name:"Clarity", zh:"澄晰", d:"清晰心智，協助釐清方向與意圖。"},
-{name:"R.C.", zh:"樂C", d:"促進呼吸與能量流動，帶來清新感。"},
-{name:"Thieves", zh:"盜賊", d:"強化防護場域，支持清新與穩定。"},
-{name:"Transformation", zh:"轉化", d:"支持深層蛻變與調頻。"},
-{name:"Motivation", zh:"動力", d:"喚醒行動力與信心，讓能量前進。"},
-{name:"Envision", zh:"願景", d:"協助看見心中藍圖，支持顯化。"},
-{name:"Aroma Siez", zh:"舒活", d:"舒緩緊繃與壓力。"},
-{name:"AromaEase", zh:"舒緩", d:"放鬆釋壓，回到自在呼吸。"},
-{name:"Australian Kuranya", zh:"澳洲彩虹", d:"多元植物合奏的淨化與更新。"},
-{name:"Brain Power", zh:"腦力（專注）", d:"提升專注與記憶，靈感湧現。"},
-{name:"Build Your Dream", zh:"築夢", d:"支持夢想顯化與實踐。"},
-{name:"Celebration", zh:"慶典", d:"帶來喜悅與榮耀的氛圍。"},
-{name:"Citrus Fresh", zh:"優橘", d:"清新活力，提振心情。"},
-{name:"EndoFlex", zh:"柔衡", d:"支持能量流動與內在平衡。"},
-{name:"Energy", zh:"能量", d:"振奮精神，提升體力與行動力。"},
-{name:"Evergreen Essence", zh:"常青精華", d:"喚起森林清新與穩定。"},
-{name:"Exodus II", zh:"出埃及（埃及黃金）", d:"連結古老智慧與保護。"},
-{name:"Gathering", zh:"聚合", d:"專注與靈性連結，召喚使命。"},
-{name:"Gentle Baby", zh:"溫柔寶貝", d:"柔和滋養，適合親子與敏感時刻。"},
-{name:"Gratitude", zh:"感恩", d:"提升正向能量與幸福感。"},
-{name:"Grounding", zh:"穩定", d:"紮根當下，讓心安定。"},
-{name:"Hope", zh:"希望", d:"注入希望與光明，重拾信念。"},
-{name:"Humility", zh:"謙卑", d:"柔化自我，連結更高智慧。"},
-{name:"Inner Child", zh:"內在小孩", d:"喚醒純真與自我接納。"},
-{name:"Inspiration", zh:"靈感", d:"支持直覺與創造性流動。"},
-{name:"Into the Future", zh:"未來展望", d:"放下過去，踏向新頁。"},
-{name:"Live with Passion", zh:"熱情生活", d:"激發熱情與生命力。"},
-{name:"Magnify Your Purpose", zh:"放大目標", d:"聚焦使命，放大實現力量。"},
-{name:"Melrose", zh:"駐容", d:"更新能量，支持潔淨。"},
-{name:"M-Grain", zh:"頭頸舒緩", d:"舒緩緊繃與壓力。"},
-{name:"PanAway", zh:"舒敏", d:"舒緩與修復，恢復平衡。"},
-{name:"Paraway", zh:"排淨", d:"支持清理與循環。"},
-{name:"Present Time", zh:"當下", d:"回到此時此刻，增強臨在感。"},
-{name:"Purification", zh:"淨化", d:"清除雜質與悶濁，恢復清新。"},
-{name:"Raven", zh:"樂抒", d:"敞開胸臆，呼吸與心靈釋放。"},
-{name:"RutaVaLa", zh:"舒眠", d:"放鬆身心，支持睡眠品質。"},
-{name:"SARA", zh:"愛自己", d:"情感支持，修復過往創傷。"},
-{name:"Sensation", zh:"感官", d:"喚醒感官與親密連結。"},
-{name:"3 Wise Men", zh:"三位智者", d:"啟發智慧與內在覺醒。"},
-{name:"Trauma Life", zh:"創傷釋放", d:"釋放深層創痛，心靈修復。"},
-{name:"Tranquil", zh:"寧靜", d:"帶來安定與放鬆。"},
-{name:"Aroma Life", zh:"生命之香", d:"支持循環與活力。"},
-{name:"AromaLux", zh:"能量擴香", d:"清新振奮，提升空間感。"},
-{name:"Believe", zh:"信念", d:"強化信心與信任生命。"},
-{name:"Bliss", zh:"福樂", d:"輕快與幸福的氛圍。"},
-{name:"Highest Potential", zh:"極致潛能", d:"喚醒天賦，攀向高峰。"},
-{name:"Forgive Me", zh:"自我寬恕", d:"對自己更溫柔。"},
-{name:"Gentle Night", zh:"柔夜", d:"放鬆入眠的溫柔陪伴。"},
-{name:"Harmony II", zh:"和諧 II", d:"再平衡，再一致。"},
-{name:"Joyful Moments", zh:"喜悅時刻", d:"提升幸福波段。"},
-{name:"Light & Love", zh:"光與愛", d:"溫暖擁抱與慈愛流動。"},
-{name:"Oola Balance", zh:"烏拉平衡", d:"全方位平衡與整合。"},
-{name:"Oola Finance", zh:"烏拉財富", d:"建立富足與秩序。"},
-{name:"Oola Family", zh:"烏拉家庭", d:"連結與支持的能量。"},
-{name:"Oola Faith", zh:"烏拉信念", d:"信任與對齊。"},
-{name:"Oola Fitness", zh:"烏拉活力", d:"身心能量的動能。"},
-{name:"Oola Fun", zh:"烏拉樂趣", d:"輕鬆玩心，愉悅前行。"},
-{name:"Raindrop", zh:"能量雨", d:"淨化與調頻的序曲。"},
-{name:"Valor II", zh:"勇氣 II", d:"穩定支撐版本。"},
-{name:"White Light", zh:"白光", d:"清淨守護。"},
-{name:"Awaken", zh:"甦醒", d:"喚醒靈魂，對齊願景。"}
-]; // ~60+
+ {name:"Peace & Calming", zh:"舒靜", d:"安撫情緒、深層寧眠與內在平靜。"},
+ {name:"Harmony", zh:"和諧（樂融）", d:"平衡身心能量，促進關係協調。"},
+ {name:"Joy", zh:"喜悅", d:"喚醒喜悅與愛的頻率。"},
+ {name:"Valor", zh:"勇氣", d:"支撐內在力量，跨越恐懼。"},
+ {name:"Abundance", zh:"豐盛", d:"提升顯化能量，吸引豐裕。"},
+ {name:"Forgiveness", zh:"寬恕", d:"釋放糾結，帶來心靈自由與療癒。"},
+ {name:"Stress Away", zh:"樂自在", d:"舒緩壓力，回到自在。"},
+ {name:"Dream Catcher", zh:"捕夢網", d:"開啟靈感與夢境顯化。"},
+ {name:"Sacred Mountain", zh:"聖山", d:"穩固如山的守護與安定。"},
+ {name:"White Angelica", zh:"白使者", d:"純淨守護能量，被愛包圍。"},
+ {name:"Release", zh:"釋放", d:"放下沉重情緒，打開心扉。"},
+ {name:"En-R-Gee", zh:"覺醒能量", d:"喚醒動力與精神活力。"},
+ {name:"Acceptance", zh:"接受", d:"擁抱當下，與現實和平。"},
+ {name:"Clarity", zh:"澄晰", d:"清晰心智，釐清方向。"},
+ {name:"R.C.", zh:"樂C", d:"清新呼吸與能量流動。"},
+ {name:"Thieves", zh:"盜賊", d:"強化防護場域，空氣淨化。"},
+ {name:"Transformation", zh:"轉化", d:"支持深層蛻變與調頻。"},
+ {name:"Motivation", zh:"動力", d:"喚醒行動力與信心。"},
+ {name:"Envision", zh:"願景", d:"看見藍圖，支持顯化旅程。"},
+ {name:"Aroma Siez", zh:"舒活", d:"釋放緊繃與壓力。"},
+ {name:"AromaEase", zh:"舒緩", d:"放鬆釋壓，自在呼吸。"},
+ {name:"Brain Power", zh:"腦力（專注）", d:"提振專注與記憶。"},
+ {name:"Build Your Dream", zh:"築夢", d:"支持夢想實現。"},
+ {name:"Citrus Fresh", zh:"優橘", d:"清新愉悅、淨化心靈。"},
+ {name:"EndoFlex", zh:"柔衡", d:"促進流動與平衡。"},
+ {name:"Energy", zh:"能量", d:"振奮精神與體力。"},
+ {name:"Evergreen Essence", zh:"常青精華", d:"森林清新與純淨。"},
+ {name:"Exodus II", zh:"出埃及", d:"古老智慧與靈性守護。"},
+ {name:"Gathering", zh:"聚合", d:"專注與靈性連結。"},
+ {name:"Gentle Baby", zh:"溫柔寶貝", d:"柔和滋養，親子友善。"},
+ {name:"Gratitude", zh:"感恩", d:"提升正向與幸福感。"},
+ {name:"Grounding", zh:"穩定", d:"扎根當下、安定踏實。"},
+ {name:"Hope", zh:"希望", d:"注入希望與光明。"},
+ {name:"Humility", zh:"謙卑", d:"柔化自我、連結更高智慧。"},
+ {name:"Inner Child", zh:"內在小孩", d:"喚醒純真與自我接納。"},
+ {name:"Inspiration", zh:"靈感", d:"打開靈感之門與創造力。"},
+ {name:"Into the Future", zh:"未來展望", d:"放下過去，迎向新生。"},
+ {name:"Live with Passion", zh:"熱情生活", d:"激發熱情與生命力。"},
+ {name:"Magnify Your Purpose", zh:"放大目標", d:"聚焦使命與實現力量。"},
+ {name:"Melrose", zh:"駐容", d:"清潔更新、煥然一新。"},
+ {name:"M-Grain", zh:"頭頸舒緩", d:"舒緩緊繃壓力。"},
+ {name:"PanAway", zh:"舒敏", d:"舒緩修復，恢復平衡。"},
+ {name:"Present Time", zh:"當下", d:"回到此刻、增強臨在。"},
+ {name:"Purification", zh:"淨化", d:"清除雜質與負能量。"},
+ {name:"Raven", zh:"樂抒", d:"敞開胸臆，呼吸順暢。"},
+ {name:"RutaVaLa", zh:"舒眠", d:"放鬆深休與睡眠品質。"},
+ {name:"SARA", zh:"愛自己", d:"情感支持，療癒創傷。"},
+ {name:"Sensation", zh:"感官", d:"喚醒愛與親密連結。"},
+ {name:"3 Wise Men", zh:"三位智者", d:"靈性智慧與覺醒。"},
+ {name:"Trauma Life", zh:"創傷釋放", d:"釋放深層創痛、修復。"},
+ {name:"Tranquil", zh:"寧靜", d:"安定放鬆，營造平和。"},
+ {name:"Aroma Life", zh:"活力", d:"活化循環與元氣。"},
+ {name:"Believe", zh:"信念", d:"對齊內在信任與願景。"},
+ {name:"Common Sense", zh:"常識", d:"務實清晰、判斷力。"},
+ {name:"Dragon Time", zh:"龍之時光", d:"柔和安撫、循環和緩。"},
+ {name:"Highest Potential", zh:"最高潛能", d:"激發潛力與使命。"},
+ {name:"Oola Balance", zh:"烏拉平衡", d:"全域平衡。"},
+ {name:"Oola Finance", zh:"烏拉財富", d:"富足顯化。"},
+ {name:"Oola Family", zh:"烏拉家庭", d:"連結共融。"},
+ {name:"Oola Faith", zh:"烏拉信念", d:"信任交托。"},
+ {name:"Oola Fitness", zh:"烏拉健康", d:"元氣活力。"},
+ {name:"Oola Field", zh:"烏拉事業", d:"目標拓展。"},
+ {name:"Oola Fun", zh:"烏拉樂趣", d:"玩心與喜悅。"}
+];
 
-/* ===================== 今日精油：依最低兩階推薦（2 款） ===================== */
-async function ensureYL(){ return true; }
-function oilBlock(o){ return `<div class="card"><b>${o.name}</b>（${o.zh}）<br><span class="small">${o.d}</span></div>`; }
-async function pickTodayOils(vals){
-  const box=document.getElementById('oilBox');
-  if(!vals.length){ box.textContent='請先完成量表並生成雷達圖。'; return; }
-  await ensureYL();
-  const list = vals.map((v,i)=>({i,v})).sort((a,b)=>a.v-b.v);
-  const idxs = [list[0].i, list[1].i];
-  const picks = [];
-  idxs.forEach(i=>{ picks.push(YL_BLENDS[Math.floor(Math.random()*YL_BLENDS.length)]); });
-  box.innerHTML = picks.map(oilBlock).join('');
-}
+/* =============== 依階段推薦精油（候選池） =============== */
+const OILS_BY_STAGE = {
+  S1:["Clarity","Acceptance","Present Time","Harmony","Peace & Calming"],
+  S2:["Release","AromaEase","Purification","Grounding","Sacred Mountain"],
+  S3:["Envision","Joy","Dream Catcher","Live with Passion","Inspiration"],
+  S4:["Motivation","Valor","Common Sense","Magnify Your Purpose","Build Your Dream"],
+  S5:["Transformation","Oola Balance","Oola Fitness","Highest Potential","Energy"],
+  S6:["Gratitude","Hope","Surrender","Abundance","Gathering"],
+  S7:["White Angelica","Tranquil","Forgiveness","Inner Child","Trauma Life"]
+};
+function oilBlock(o){ return `<div class="section" style="background:#121327">
+  <div><b>${o.name}</b>（${o.zh}）</div>
+  <div class="small">${o.d}</div>
+</div>`; }
 
-/* ===================== 旅程進度（每日一次） ===================== */
-const JOURNEYS=[{key:'j7',days:7},{key:'j21',days:21},{key:'j30',days:30}];
-function todayKey(){ const d=new Date(); return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate(); }
-function readJ(k){ try{return JSON.parse(localStorage.getItem(k)||'{"d":0,"last":""}');}catch(e){return {d:0,last:''};} }
-function writeJ(k,o){ localStorage.setItem(k,JSON.stringify(o)); }
-function markDay(which){
-  const j=JOURNEYS[which]; const o=readJ(j.key); const tk=todayKey();
-  if(o.last===tk){ alert('今天已打卡，明天再來 ✨'); return false; }
-  o.d=Math.min(o.d+1,j.days); o.last=tk; writeJ(j.key,o); renderJourney(); maybeUnlock(which,o.d===j.days); return true;
+/* =============== 今日神諭&精油選擇 =============== */
+function drawOracle(ask=true){
+  const today = todayStr();
+  const saved = read("oracle",{date:"",idx:null});
+  if(saved.date===today && saved.idx!=null){
+    $("#oracleBox").innerHTML = blockOracle(ORACLE_CARDS[saved.idx]); return;
+  }
+  const idx = Math.floor(Math.random()*ORACLE_CARDS.length);
+  write("oracle",{date:today,idx});
+  $("#oracleBox").innerHTML = blockOracle(ORACLE_CARDS[idx]);
 }
-function pct(x,max){ return Math.round(100*x/max); }
-function renderJourney(){
-  [{p:'p7',t:'t7',l:'lock7',btn:'btn7',j:JOURNEYS[0]},
-   {p:'p21',t:'t21',l:'lock21',btn:'btn21',j:JOURNEYS[1]},
-   {p:'p30',t:'t30',l:'lock30',btn:'btn30',j:JOURNEYS[2]}].forEach((u,i)=>{
-    const o=readJ(u.j.key);
-    document.getElementById(u.p).style.width=pct(o.d,u.j.days)+'%';
-    document.getElementById(u.t).textContent=`${o.d} / ${u.j.days} 天`+(o.last?`（${o.last}）`:'');
-    const lock=document.getElementById(u.l);
-    lock.classList.toggle('unlock', o.d>=u.j.days);
-    const btn=document.getElementById(u.btn);
-    btn.onclick=()=>markDay(i);
+function blockOracle(c){ return `<blockquote><b>「${c.t}」</b><br>${c.m}<br><b>行動：</b>${c.a}</blockquote>`; }
+$("#drawOracle").onclick=()=>drawOracle(true);
+
+/* 以最低兩階推薦 1–2 款 */
+function pickTodayOils(avg){
+  const box=$("#oilBox");
+  if(!avg){ box.textContent="請先完成量表並生成雷達圖。"; return; }
+  const sorted=Object.entries(avg).sort((a,b)=>a[1]-b[1]);
+  const ids = [sorted[0][0], sorted[1][0]];
+  const picks=[];
+  ids.forEach(k=>{
+    const pool = OILS_BY_STAGE[k] || [];
+    const name = pool[Math.floor(Math.random()*pool.length)];
+    const oil = YL_BLENDS.find(x=>x.name===name) || YL_BLENDS[Math.floor(Math.random()*YL_BLENDS.length)];
+    picks.push(oil);
+  });
+  box.innerHTML = picks.map(oilBlock).join("");
+}
+$("#swapOil").onclick=()=>{ const avg=read("lastAvg",null); pickTodayOils(avg); };
+
+/* =============== 量表流程按鈕 =============== */
+$("#genRadar").onclick=()=>{
+  const vals = QUESTIONS.map((_,i)=>+$("#q"+i).value);
+  saveScores(vals);
+  const avg=getStageAverages(vals);
+  write("lastAvg",avg);
+  drawRadar(avg);
+  renderStageCards(avg);
+  pickTodayOils(avg);
+};
+
+/* =============== 旅程進度（每日一次） =============== */
+function initJourney(){
+  ["7","21","30"].forEach(n=>{
+    const key="journey"+n;
+    let data = read(key,{count:0,last:""});
+    const limit = +n;
+    const bar=$("#p"+n), txt=$("#t"+n), btn=$("#check"+n), lock=$("#lock"+n), wrap=$("#lock"+n).parentElement;
+    const update=()=>{
+      const pct=Math.min(100, Math.round(100*data.count/limit));
+      bar.style.width=pct+"%"; txt.textContent=`${data.count} / ${limit} 天`;
+      if(data.count>=limit){
+        lock.classList.add("unlocked"); wrap.classList.add("unlocked");
+        wrap.querySelector(".flash").style.opacity="1";
+      }else{
+        lock.classList.remove("unlocked"); wrap.classList.remove("unlocked");
+        wrap.querySelector(".flash").style.opacity="0";
+      }
+    };
+    update();
+    btn.onclick=()=>{
+      const t=todayStr();
+      if(data.last===t){ toast("已打卡","今天已經完成打卡囉！<br>（每日僅能一次）"); return; }
+      data.count++; data.last=t; write(key,data); update();
+      if(data.count===limit){
+        write(key,{count:0,last:t}); // 進下一輪
+        update();
+        unlockHiddenCard(n);
+      }
+    };
   });
 }
-function maybeUnlock(which,done){
-  if(!done) return;
-  const card = HIDDEN_CARDS[(readJ('unlock_idx_'+which).d||0)%HIDDEN_CARDS.length];
-  localStorage.setItem('unlock_idx_'+which, JSON.stringify({d:(readJ('unlock_idx_'+which).d||0)+1}));
-  setTimeout(()=>{
-    alert(`🔴 隱藏靈魂卡｜${card.t}\n\n${card.p}\n\n行動：${card.a}`);
-  },50);
+function unlockHiddenCard(from){
+  const idx = read("hiddenIdx",0);
+  const card = HIDDEN_CARDS[idx % HIDDEN_CARDS.length];
+  write("hiddenIdx", idx+1);
+  toast("🔓 隱藏靈魂卡｜"+card.t, `${card.m}<hr><b>行動：</b>${card.a}<div class="small" style="margin-top:6px">（來源：完成 ${from} 日週期）</div>`);
 }
+initJourney();
 
-/* ===================== 啟動與事件 ===================== */
-function drawOracle(allowRefresh=true){
-  const box=document.getElementById('oracleBox'); const key='oracle_'+todayKey();
-  if(!allowRefresh && localStorage.getItem(key)){ box.innerHTML=localStorage.getItem(key); return; }
-  const pick = ORACLE[Math.floor(Math.random()*ORACLE.length)];
-  const html = `<b>「${pick.t}」</b>\n${pick.p}\n\n<span class="ok">行動：</span>${pick.a}`;
-  box.innerHTML = html; localStorage.setItem(key, html);
-}
-document.getElementById('drawOracle').addEventListener('click',()=>drawOracle(false));
-document.getElementById('genRadar').addEventListener('click',()=>{
-  const raw=collectVals(); saveScores(raw);
-  const means=toPhaseMeans(raw); drawRadar(means); renderInfoCards(raw); pickTodayOils(raw);
-});
-document.getElementById('swapOil').addEventListener('click',()=>pickTodayOils(loadLastScores()));
-
+/* =============== 啟動 =============== */
 (function boot(){
-  renderJourney(); drawOracle(false);
-  const prev = loadLastScores(); if(prev.length){ drawRadar(toPhaseMeans(prev)); renderInfoCards(prev); }
+  drawOracle(false);
+  const prev = read("scores",[]);
+  if(prev.length){
+    const avg=getStageAverages(prev);
+    write("lastAvg",avg);
+    drawRadar(avg);
+    renderStageCards(avg);
+    pickTodayOils(avg);
+  }
 })();
 </script>
-</body></html>
+</body>
+</html>
