@@ -1,140 +1,168 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Enervi7 v7 Journey Core</title>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Enervi7 • Journey + Measure + Oracle + Oils (Single File)</title>
+<meta name="theme-color" content="#6d28d9">
 <style>
   :root{
-    --bg:#0f0c18;
-    --panel:#171427;
-    --text:#f1ecff;
-    --muted:#b8b6c9;
-    --brand:#7a3cff;
-    --brand-2:#5ee2ff;
-    --ok:#36d399;
-    --warn:#ffbf5e;
-    --danger:#ff6b6b;
+    --bg:#0f0c18;--panel:#16142a;--card:#14122a;--text:#efeaff;--muted:#b9b6cf;
+    --brand:#7a3cff;--brand2:#66e1ff;--ok:#22c55e;--warn:#f59e0b;
   }
-  html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",Roboto,"Helvetica Neue",Arial,sans-serif;}
-  .wrap{max-width:880px;margin:24px auto 80px;padding:0 16px;}
-  h1{margin:0 0 8px;font-size:28px;font-weight:800}
-  .sub{color:var(--muted);font-size:14px;margin-bottom:18px}
-
-  /* 面板 */
-  .card{background:var(--panel);border-radius:14px;padding:18px 16px;margin:16px 0;box-shadow:0 6px 24px rgba(0,0,0,.25)}
-  .row{display:flex;gap:12px;align-items:center}
-  .muted{color:var(--muted)}
-  .btn{padding:10px 14px;border-radius:10px;border:0;background:var(--brand);color:#fff;font-weight:700;cursor:pointer}
-  .btn:active{transform:translateY(1px)}
+  html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Noto Sans TC",Inter,Roboto,"Helvetica Neue",Arial,sans-serif}
+  .wrap{max-width:980px;margin:0 auto;padding:18px 16px 64px}
+  header{background:linear-gradient(180deg,#6d28d9 0%,#4c1d95 100%);padding:24px 16px 18px}
+  h1{margin:0;font-size:28px;font-weight:800}
+  .sub{opacity:.9;margin-top:6px}
+  .section{background:var(--panel);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:16px;margin:14px 0;box-shadow:0 6px 28px rgba(0,0,0,.25)}
+  h2{margin:0 0 10px;font-size:20px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .btn{background:var(--brand);border:0;color:#fff;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
   .btn.secondary{background:#2a2550}
-  .tag{font-size:12px;padding:4px 8px;border-radius:999px;background:#2a2550;color:#d8d6f6}
-
-  /* 進度條 */
-  .bar{height:10px;background:#231d3e;border-radius:20px;overflow:hidden}
-  .bar > span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--brand-2));transition:width .5s ease}
-
-  /* 勳章 / 鎖頭 */
-  .badge{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:#1d1934;position:relative;box-shadow:inset 0 0 0 2px #2d265a}
+  .pill{display:inline-block;padding:4px 10px;border-radius:999px;background:#272348;color:#dcd7ff;font-size:12px}
+  .muted{color:var(--muted)} .sm{font-size:13px;color:var(--muted)}
+  input[type=range]{width:100%}
+  .q{background:var(--card);border:1px solid #26234a;border-radius:12px;padding:12px;margin:10px 0}
+  #radar{width:100%;height:auto;display:block}
+  .card{background:var(--card);border:1px solid #26234a;border-radius:12px;padding:12px}
+  .kv{background:#24224a;border:1px solid #32305c;border-radius:10px;padding:4px 8px;font-size:12px;margin:2px 4px;display:inline-block}
+  details>summary{cursor:pointer;list-style:none}
+  details>summary::-webkit-details-marker{display:none}
+  .grid2{display:grid;grid-template-columns:1fr;gap:10px}
+  @media(min-width:780px){.grid2{grid-template-columns:1fr 1fr}}
+  /* 旅程進度條 */
+  .jbar{height:10px;background:#241f42;border-radius:999px;overflow:hidden}
+  .jbar>.fill{height:100%;width:0;background:linear-gradient(90deg,var(--brand),var(--brand2));transition:width .5s ease}
+  /* 打卡核取 */
+  .check{appearance:none;width:22px;height:22px;border-radius:6px;border:2px solid #3a3463;background:transparent;cursor:pointer}
+  .check:checked{background:var(--ok);border-color:var(--ok)}
+  /* 徽章 / 鎖頭 */
+  .badge{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:#1b1732;position:relative;box-shadow:inset 0 0 0 2px #2d265a}
   .badge svg{width:26px;height:26px;opacity:.9}
-  .badge.locked svg path{fill:#7b78a3}
+  .badge.locked svg path{fill:#8f8cb3}
   .badge.unlocked{animation:pop .5s ease both}
-  @keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.15)}100%{transform:scale(1)}}
-
+  @keyframes pop{0%{transform:scale(.6)}60%{transform:scale(1.12)}100%{transform:scale(1)}}
   /* 解鎖光暈 */
   .badge.unlock::before{
     content:"";position:absolute;inset:-4px;border-radius:inherit;
     background:radial-gradient( circle at 50% 50%, rgba(122,60,255,.55), transparent 60%);
-    filter:blur(6px);animation:glow 1.8s ease-in-out 2;
+    filter:blur(6px);animation:glow 1.6s ease-in-out 2;
   }
-  @keyframes glow{
-    0%,100%{opacity:.2;transform:scale(.95)}
-    50%{opacity:1;transform:scale(1.05)}
-  }
-
-  /* 勾選 (每日打卡) */
-  .check{appearance:none;width:22px;height:22px;border-radius:6px;margin-right:8px;
-         border:2px solid #3a3463;background:transparent;cursor:pointer}
-  .check:checked{background:var(--ok);border-color:var(--ok)}
-
-  /* 對話框 */
-  dialog{border:0;border-radius:16px;padding:0;background:#181532;color:var(--text);max-width:520px}
+  @keyframes glow{0%,100%{opacity:.2;transform:scale(.95)}50%{opacity:1;transform:scale(1.05)}}
+  /* Toast / Modal */
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#372a63;color:#fff;border-radius:12px;padding:8px 12px;opacity:.98;z-index:9999}
+  dialog{border:0;border-radius:16px;padding:0;background:#181532;color:#efeaff;max-width:560px}
   dialog::backdrop{background:rgba(0,0,0,.55)}
   .dlg-hd{padding:16px 18px;border-bottom:1px solid #2b2650;font-weight:800;display:flex;justify-content:space-between}
-  .dlg-bd{padding:16px 18px}
+  .dlg-bd{padding:16px 18px;white-space:pre-wrap}
   .dlg-ft{padding:14px 18px;border-top:1px solid #2b2650;text-align:right}
   .x{background:#2a2550;border:0;color:#eae6ff;border-radius:10px;padding:8px 12px;font-weight:700;cursor:pointer}
-
-  /* 小字 */
-  .sm{font-size:13px;color:var(--muted)}
-
-  /* 日曆小圓點 */
-  .dot{width:8px;height:8px;background:#3a3463;border-radius:50%}
-  .dot.on{background:var(--ok)}
+  .footer{opacity:.6;text-align:center;margin-top:14px}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>Enervi7 ｜旅程進度</h1>
-  <div class="sub">本區塊：7／21／30 天打卡進度＋解鎖動畫＋每日僅能打卡一次（同日重複無效）</div>
-
-  <!-- 旅程進度 -->
-  <div class="card">
-    <h2>🌀 旅程進度</h2>
-
-    <div class="card" style="background:#14112a;border-radius:12px">
-      <div class="row" style="justify-content:space-between;margin-bottom:8px">
-        <div class="row">
-          <div class="tag">7 日能量挑戰</div>
-        </div>
-        <div class="muted"><span id="d7">0</span> / 7 天</div>
-      </div>
-      <div class="bar"><span id="p7"></span></div>
-      <div class="row" style="margin-top:12px;justify-content:space-between">
-        <label class="row sm"><input class="check" type="checkbox" id="tick7" />完成今日打卡</label>
-        <div class="badge locked" id="b7" title="解鎖後顯示卡片">
-          <!-- 鎖頭 SVG -->
-          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v3H9V7a3 3 0 013-3z" fill="#9a96c7"/></svg>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="background:#14112a;border-radius:12px">
-      <div class="row" style="justify-content:space-between;margin-bottom:8px">
-        <div class="row">
-          <div class="tag">21 日靈魂轉化</div>
-        </div>
-        <div class="muted"><span id="d21">0</span> / 21 天</div>
-      </div>
-      <div class="bar"><span id="p21"></span></div>
-      <div class="row" style="margin-top:12px;justify-content:space-between">
-        <label class="row sm"><input class="check" type="checkbox" id="tick21" />完成今日打卡</label>
-        <div class="badge locked" id="b21">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5z" fill="#9a96c7"/></svg>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="background:#14112a;border-radius:12px">
-      <div class="row" style="justify-content:space-between;margin-bottom:8px">
-        <div class="row">
-          <div class="tag">30 日顯化日記</div>
-        </div>
-        <div class="muted"><span id="d30">0</span> / 30 天</div>
-      </div>
-      <div class="bar"><span id="p30"></span></div>
-      <div class="row" style="margin-top:12px;justify-content:space-between">
-        <label class="row sm"><input class="check" type="checkbox" id="tick30" />完成今日打卡</label>
-        <div class="badge locked" id="b30">
-          <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5z" fill="#9a96c7"/></svg>
-        </div>
-      </div>
-    </div>
-
-    <div class="sm" style="margin-top:8px">小提醒：同一天只會記錄一次打卡；跨日才會累加。</div>
+<header>
+  <div class="wrap">
+    <h1>Enervi7 一頁版</h1>
+    <div class="sub">量表 ➜ 雷達 ➜ 七階卡 ➜ 呢喃神諭 ➜ 今日精油 ➜ 旅程打卡（離線可用）</div>
   </div>
-</div>
+</header>
+
+<main class="wrap">
+  <!-- 旅程進度 -->
+  <section class="section">
+    <h2>🌀 旅程進度</h2>
+    <div class="grid2">
+      <!-- 7 日 -->
+      <div class="card">
+        <div class="row" style="justify-content:space-between">
+          <div class="pill">7 日能量挑戰</div>
+          <div class="muted"><span id="d7">0</span> / 7 天</div>
+        </div>
+        <div class="jbar" style="margin:8px 0 10px"><div class="fill" id="p7"></div></div>
+        <div class="row" style="justify-content:space-between">
+          <label class="row sm"><input id="tick7" class="check" type="checkbox"> 完成今日打卡</label>
+          <div class="badge locked" id="b7" title="滿 7 天解鎖">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v3H9V7a3 3 0 013-3z" fill="#9a96c7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 21 日 -->
+      <div class="card">
+        <div class="row" style="justify-content:space-between">
+          <div class="pill">21 日靈魂轉化</div>
+          <div class="muted"><span id="d21">0</span> / 21 天</div>
+        </div>
+        <div class="jbar" style="margin:8px 0 10px"><div class="fill" id="p21"></div></div>
+        <div class="row" style="justify-content:space-between">
+          <label class="row sm"><input id="tick21" class="check" type="checkbox"> 完成今日打卡</label>
+          <div class="badge locked" id="b21" title="滿 21 天解鎖">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v3H9V7a3 3 0 013-3z" fill="#9a96c7"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- 30 日 -->
+      <div class="card">
+        <div class="row" style="justify-content:space-between">
+          <div class="pill">30 日顯化日記</div>
+          <div class="muted"><span id="d30">0</span> / 30 天</div>
+        </div>
+        <div class="jbar" style="margin:8px 0 10px"><div class="fill" id="p30"></div></div>
+        <div class="row" style="justify-content:space-between">
+          <label class="row sm"><input id="tick30" class="check" type="checkbox"> 完成今日打卡</label>
+          <div class="badge locked" id="b30" title="滿 30 天解鎖">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v3H9V7a3 3 0 013-3z" fill="#9a96c7"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sm" style="margin-top:6px">同一天只會計 1 次打卡；跨日才會累加並可再次勾選。</div>
+  </section>
+
+  <!-- 14 題量表 -->
+  <section class="section">
+    <h2>🧭 14 題量表（0–10）</h2>
+    <div class="sm">0＝完全不符合／幾乎沒有　｜　10＝非常符合／幾乎總是</div>
+    <div id="qs"></div>
+    <div class="row" style="margin-top:8px">
+      <button class="btn" id="genRadar">生成能量雷達圖</button>
+      <div class="sm">平均分會反映到下方「七階資訊卡」與「今日精油」。</div>
+    </div>
+  </section>
+
+  <!-- 雷達圖 -->
+  <section class="section">
+    <h2>📈 能量雷達圖</h2>
+    <svg id="radar" viewBox="0 0 420 420" aria-label="能量雷達圖"></svg>
+    <div id="scoresLine" class="sm" style="margin-top:8px"></div>
+  </section>
+
+  <!-- 七階資訊卡 -->
+  <section class="section">
+    <h2>🌈 七階資訊卡（自動展開最低兩階）</h2>
+    <div id="infoCards"></div>
+  </section>
+
+  <!-- 呢喃神諭 + 今日建議精油 -->
+  <section class="section">
+    <h2>🪔 日常導引</h2>
+    <div class="grid2">
+      <div class="card">
+        <div class="row" style="justify-content:space-between"><b>呢喃神諭（每日不重複）</b><button class="btn secondary" id="rerollOracle">抽一張</button></div>
+        <div id="oracleBox" class="sm" style="margin-top:8px">今日神諭載入中…</div>
+      </div>
+      <div class="card">
+        <div class="row" style="justify-content:space-between"><b>今日建議精油</b><button class="btn secondary" id="swapOil">換一款</button></div>
+        <div id="oilBox" class="sm" style="margin-top:8px">請先完成量表並生成雷達圖；系統會依最低兩階挑選 2–3 款。</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer sm">Made with 💜 Enervi7</div>
+</main>
 
 <!-- 解鎖彈窗 -->
 <dialog id="unlockDlg">
@@ -144,41 +172,290 @@
   </div>
   <div class="dlg-bd">
     <div id="cardTitle" style="font-weight:800;font-size:18px;margin-bottom:6px"></div>
-    <div id="cardText" style="white-space:pre-wrap"></div>
+    <div id="cardText"></div>
   </div>
   <div class="dlg-ft"><button class="x" onclick="unlockDlg.close()">好的</button></div>
 </dialog>
 
 <script>
 /* =========================
-   1) 33 張隱藏靈魂卡
+   常量：階段、題目、行動建議、瓶頸轉換
    ========================= */
+const STAGES = [
+  { key:'白', name:'能量覺知' },
+  { key:'藍', name:'穩定與淨化' },
+  { key:'橙', name:'能量流動' },
+  { key:'黃', name:'內在力量' },
+  { key:'綠', name:'共振與連結' },
+  { key:'靛藍', name:'意識擴展' },
+  { key:'紫', name:'靈魂整合' },
+];
+
+const QUESTIONS = [
+  '我能清楚覺察自己此刻的身心狀態。','我能在混亂時，迅速把注意力帶回當下。',
+  '面對壓力或衝突時，我能保持冷靜不失衡。','我能有效地釋放累積的負面情緒與雜念。',
+  '我常感覺靈感／情感在體內自然流動。','我能順勢調整步調，不僵硬或卡住。',
+  '做決定時，我能堅定地選擇對自己真的好的事。','遇到挑戰，我仍能相信自己並往前一步。',
+  '我能真誠表達，也樂於傾聽他人。','我能感到自己與他人、與世界是連結的。',
+  '我信任直覺，且能從中獲得有用的指引。','我能從日常事件看見更深的洞見與意義。',
+  '我能把過去的經驗整合成力量，而不是枷鎖。','我常感到自己完整、對生命方向踏實安心。'
+];
+
+const ACTIONS = {
+  '白｜能量覺知':{
+    kw:['覺知','清明','面對當下'],
+    act:['寫三句「此刻我真實的感受是…」','3 分鐘腹式呼吸（4-4-6）','列出 1 個反覆念頭：是事實還是解讀？']
+  },
+  '藍｜穩定與淨化':{
+    kw:['穩定','釋放','界線'],
+    act:['寫下困擾你的 1 件事，標註可控/不可控','60 秒身體掃描，放鬆緊繃部位','完成一件拖延小事並打勾']
+  },
+  '橙｜能量流動':{
+    kw:['允許發生','對齊意圖','資源感','安全感'],
+    act:['用「我允許…」造句 3 句','回顧 1 次被支持的證據，寫下可複製點','今天主動請求一次幫助（小範圍）']
+  },
+  '黃｜內在力量':{
+    kw:['最小步驟','可驗證','節奏','執行力'],
+    act:['把目標拆成 10 分鐘一步，立刻做','設定今日 3 件 MIT','完成後公開回報給可信任對象']
+  },
+  '綠｜共振與連結':{
+    kw:['連結','價值感','貢獻','擴散'],
+    act:['分享一個小成果或洞見到朋友/社群','邀請 1 人給具體回饋（3 句）','主動建立一個合作可能（發出邀請）']
+  },
+  '靛藍｜意識擴展':{
+    kw:['專注','回饋循環','韌性','迭代'],
+    act:['把卡點→調整 1 個微策略（A/B）','25 分鐘番茄鐘全程專注','記錄 1 個有效回饋，明天沿用']
+  },
+  '紫｜靈魂整合':{
+    kw:['總結經驗','固化習慣','結構化','長期化'],
+    act:['用 5 句話摘要本週 3 件學到＋1 改進','把有效步驟寫成 Checklist 並固定到行程','為下個週期設定一個可衡量指標（KPI）']
+  }
+};
+
+const TRANSITION = {
+  'S1→S2':['把「我觀察到…」改寫成「我願意放下…」×3','情緒書寫→身體放鬆收尾（頸肩／腹部）'],
+  'S2→S3':['列出 3 個現有資源（人／物／技能）','寫 1 段：若一切對我有利，今天我允許什麼？'],
+  'S3→S4':['產出「最小可行步驟」並在 10 分鐘內啟動','預約 1 個「行動時段」，行前只做準備清單'],
+  'S4→S5':['把今日行動回饋記錄並做 1 次微調','建立 25 分鐘專注儀式，結束回顧 2 分鐘'],
+  'S5→S6':['公開分享 1 個進展／案例，索取具體回饋','辨識最被共鳴的價值，明天主打該元素'],
+  'S6→S7':['把有效做法寫成 SOP／Checklist','選一個可持續節奏（週／月）放進行事曆'],
+  'S7→S1':['本週回顧 3 句＋下一輪新意圖 1 句','挑選 1 個欲精進的指標，設置觀測方式'],
+};
+
+/* =========================
+   題目渲染
+   ========================= */
+const sliders=[], qsBox=document.getElementById('qs');
+for(let i=0;i<14;i++){
+  const s=Math.floor(i/2);
+  const wrap=document.createElement('div'); wrap.className='q';
+  wrap.innerHTML=`
+    <div><b>${s+1}. ${STAGES[s].key}｜${STAGES[s].name}</b>｜${QUESTIONS[i]}</div>
+    <input type="range" min="0" max="10" step="1" value="5" id="q${i}">
+    <div class="sm">目前：<span id="qv${i}">5</span> / 10</div>`;
+  qsBox.appendChild(wrap);
+  const input=wrap.querySelector('input'), v=wrap.querySelector(`#qv${i}`);
+  input.addEventListener('input',()=>v.textContent=input.value);
+  sliders.push(input);
+}
+
+/* =========================
+   計算平均 + 雷達（純 SVG）
+   ========================= */
+function computeStageAverages(){
+  const a=Array(7).fill(0);
+  for(let s=0;s<7;s++){
+    a[s]=(Number(sliders[s*2].value)+Number(sliders[s*2+1].value))/2;
+  }
+  return a;
+}
+const radarSVG=document.getElementById('radar'), scoresLine=document.getElementById('scoresLine');
+function drawRadar(values){
+  const W=420,H=420,CX=W/2,CY=H/2,R=160,LV=5,N=7,ang=(Math.PI*2)/N;
+  radarSVG.innerHTML='';
+  for(let l=1;l<=LV;l++){
+    const r=R*l/LV,p=[]; for(let i=0;i<N;i++){const a=-Math.PI/2+i*ang;p.push(`${CX+r*Math.cos(a)},${CY+r*Math.sin(a)}`)}
+    const pg=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    pg.setAttribute('points',p.join(' ')); pg.setAttribute('fill','none'); pg.setAttribute('stroke','rgba(255,255,255,.08)');
+    radarSVG.appendChild(pg);
+  }
+  for(let i=0;i<N;i++){
+    const a=-Math.PI/2+i*ang,x=CX+R*Math.cos(a),y=CY+R*Math.sin(a);
+    const ln=document.createElementNS('http://www.w3.org/2000/svg','line');
+    ln.setAttribute('x1',CX);ln.setAttribute('y1',CY);ln.setAttribute('x2',x);ln.setAttribute('y2',y);ln.setAttribute('stroke','rgba(255,255,255,.08)');
+    radarSVG.appendChild(ln);
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');
+    t.setAttribute('x',CX+(R+18)*Math.cos(a)); t.setAttribute('y',CY+(R+18)*Math.sin(a));
+    t.setAttribute('dominant-baseline','middle');
+    t.setAttribute('text-anchor',Math.cos(a)>0.3?'start':(Math.cos(a)<-0.3?'end':'middle'));
+    t.setAttribute('fill','#c8b6ff'); t.setAttribute('font-size','12');
+    t.textContent=`${STAGES[i].key}｜${STAGES[i].name}`; radarSVG.appendChild(t);
+  }
+  const pts=[]; for(let i=0;i<N;i++){const r=(values[i]/10),a=-Math.PI/2+i*ang;pts.push(`${CX+R*r*Math.cos(a)},${CY+R*r*Math.sin(a)}`)}
+  const area=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  area.setAttribute('points',pts.join(' ')); area.setAttribute('fill','rgba(167,139,250,.25)'); area.setAttribute('stroke','rgba(167,139,250,.95)'); area.setAttribute('stroke-width','2');
+  radarSVG.appendChild(area);
+  scoresLine.textContent = STAGES.map((s,i)=>`${s.key}｜${s.name}：${values[i].toFixed(1)}`).join(' ｜ ');
+}
+
+/* =========================
+   七階資訊卡（最低兩階展開）
+   ========================= */
+function renderInfoCards(values){
+  const list=values.map((v,i)=>({i,v})).sort((a,b)=>a.v-b.v);
+  const low2=[list[0].i,list[1].i];
+  const box=document.getElementById('infoCards'); box.innerHTML='';
+  low2.forEach(idx=>{
+    const title=`${STAGES[idx].key}｜${STAGES[idx].name}`;
+    const kvs=(ACTIONS[title]?.kw||[]).map(k=>`<span class="kv">${k}</span>`).join('');
+    const acts=(ACTIONS[title]?.act||[]).map(x=>'• '+x).join('<br>');
+    const el=document.createElement('details'); el.open=true; el.className='card';
+    el.innerHTML = `
+      <summary><b>${title}</b> ｜ 平均 <b>${values[idx].toFixed(1)}</b> 分 <span class="pill">建議</span></summary>
+      <div style="margin-top:8px">
+        <div class="sm">關鍵字：</div>
+        <div style="margin:6px 0">${kvs||'—'}</div>
+        <div class="sm">行動建議：</div>
+        <div style="margin-top:6px">${acts||'—'}</div>
+      </div>`;
+    box.appendChild(el);
+  });
+  const tBox=document.createElement('div'); tBox.className='card'; tBox.style.marginTop='10px';
+  const seq=['S1→S2','S2→S3','S3→S4','S4→S5','S5→S6','S6→S7','S7→S1'];
+  const lines = seq.slice(0,2).map(k=>`<b>${k}</b>：${(TRANSITION[k]||[]).map(x=>'• '+x).join('　')}`);
+  tBox.innerHTML = `<div class="sm">瓶頸轉換提示：</div><div style="margin-top:6px">${lines.join('<br>')}</div>`;
+  box.appendChild(tBox);
+}
+
+/* =========================
+   神諭（每日不重複）& 精油建議
+   ========================= */
+const ORACLE = [
+  {title:'成為', text:'你沒有變得更好，只是變得更真。', action:'允許自己出現 1 分鐘。'},
+  {title:'歸來', text:'你走過萬里，原來你一直都在這裡。', action:'對自己說：我回來了。'},
+  {title:'自由', text:'自由不是逃離，而是不再壓抑真實的自己。', action:'今天拒絕一個不合意的小請求。'},
+  {title:'創造', text:'創造不是你做了什麼，而是你允許什麼經由你而來。', action:'把一個靈感寫下後行動 30 秒。'},
+  {title:'靜默', text:'靜默不是空白，是語言之前的完整。', action:'做 3 次 4-4-6 呼吸。'},
+  {title:'記得', text:'你不是在尋找，而是在記得。', action:'寫一句：我想起了…（完成句子）。'}
+];
+function dayKey(prefix){ return `${prefix}_${new Date().toISOString().slice(0,10)}`; }
+function drawOracle(force=false){
+  const k = dayKey('e7_oracle');
+  if(!force){
+    const cached = localStorage.getItem(k);
+    if(cached){ document.getElementById('oracleBox').innerHTML = cached; return; }
+  }
+  const pick = ORACLE[Math.floor(Math.random()*ORACLE.length)];
+  const html = `<div class="sm">「${pick.title}」</div><div style="margin-top:6px">${pick.text}</div><div class="sm" style="margin-top:8px"><b>行動：</b>${pick.action}</div>`;
+  document.getElementById('oracleBox').innerHTML = html;
+  localStorage.setItem(k, html);
+}
+document.getElementById('rerollOracle').addEventListener('click',()=>drawOracle(true));
+
+const YL = [
+  {"name":"Peace & Calming","zh_name":"舒靜","description":"安撫情緒，帶來深層寧眠與內在平靜。"},
+  {"name":"Harmony","zh_name":"和諧（樂融）","description":"平衡身心能量，促進內在與關係的協調連結。"},
+  {"name":"Joy","zh_name":"喜悅","description":"喚醒內心喜悅與愛的頻率，帶來幸福感。"},
+  {"name":"Valor","zh_name":"勇氣","description":"支撐內在力量，幫助你跨越恐懼與挑戰。"},
+  {"name":"Abundance","zh_name":"豐盛","description":"提升顯化能量，吸引繁盛與豐裕進入生命。"},
+  {"name":"Forgiveness","zh_name":"寬恕","description":"釋放過去結，帶來心靈的自由與療癒。"},
+  {"name":"Stress Away","zh_name":"樂自在","description":"溫柔舒緩壓力，讓身心回歸柔軟與自在。"},
+  {"name":"Dream Catcher","zh_name":"捕夢網","description":"開啟靈感與想像的通道，支持夢境與直覺顯化。"},
+  {"name":"Sacred Mountain","zh_name":"聖山","description":"穩固如山的內在力量，帶來神聖守護感。"},
+  {"name":"White Angelica","zh_name":"白使者","description":"純淨守護能量，讓你感受到被愛與守護。"}
+];
+function oilBlock(o){ return `<div class="card"><b>${o.name}</b>（${o.zh_name||'—'}）<div class="sm" style="margin-top:6px">${o.description||''}</div></div>`; }
+function pickTodayOils(vals){
+  const box=document.getElementById('oilBox');
+  if(!vals || !vals.length){ box.textContent='請先完成量表並生成雷達圖。'; return; }
+  const list = vals.map((v,i)=>({i,v})).sort((a,b)=>a.v-b.v); // 低→高
+  const idxs = [list[0].i, list[1].i]; // 兩個最低
+  const picks = [];
+  idxs.forEach(()=> picks.push(YL[Math.floor(Math.random()*YL.length)]));
+  box.innerHTML = picks.map(oilBlock).join('');
+}
+document.getElementById('swapOil').addEventListener('click',()=>pickTodayOils(JSON.parse(localStorage.getItem('e7_scores_v1')||'[]')));
+
+/* =========================
+   旅程：每日一次打卡 + 解鎖動畫 + 隱藏靈魂卡（33）
+   ========================= */
+const LSKEY = "enervi7_journey_v3";
+const S = (k,d)=>{ try{return JSON.parse(localStorage.getItem(k)??JSON.stringify(d));}catch(e){return d;} };
+const W = (k,v)=>localStorage.setItem(k, JSON.stringify(v));
+const state = S(LSKEY, { d7:0,d21:0,d30:0, last:null, unlocked7:false,unlocked21:false,unlocked30:false, idx:0 });
+
+function today(){ return new Date().toISOString().slice(0,10); }
+function toast(msg){
+  const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t); setTimeout(()=>{t.style.transition='opacity .35s'; t.style.opacity='0'; setTimeout(()=>t.remove(),380)},1100);
+}
+function renderJourney(){
+  d7.textContent=state.d7; d21.textContent=state.d21; d30.textContent=state.d30;
+  p7.style.width=Math.min(state.d7/7*100,100)+'%';
+  p21.style.width=Math.min(state.d21/21*100,100)+'%';
+  p30.style.width=Math.min(state.d30/30*100,100)+'%';
+  const done = state.last===today();
+  tick7.checked=done; tick21.checked=done; tick30.checked=done;
+  setBadge(b7,state.unlocked7); setBadge(b21,state.unlocked21); setBadge(b30,state.unlocked30);
+}
+function setBadge(el,unlocked){
+  el.classList.remove('unlock');
+  if(unlocked){
+    el.classList.remove('locked'); el.classList.add('unlocked','unlock');
+    el.innerHTML = `<svg viewBox="0 0 24 24" fill="none"><path d="M17 10V7a5 5 0 10-10 0h2a3 3 0 116 0v3h-1a2 2 0 00-2 2v8a2 2 0 002 2h4a2 2 0 002-2v-8a2 2 0 00-2-2h-1z" fill="#c7b6ff"/></svg>`;
+    setTimeout(()=>el.classList.remove('unlock'),1400);
+  }else{
+    el.classList.add('locked'); el.classList.remove('unlocked');
+    el.innerHTML = `<svg viewBox="0 0 24 24" fill="none"><path d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v3H9V7a3 3 0 013-3z" fill="#9a96c7"/></svg>`;
+  }
+}
+function unlockIf(){ // 判定解鎖 & 顯示卡
+  const hits=[];
+  if(state.d7===7 && !state.unlocked7){ state.unlocked7=true; hits.push(7); }
+  if(state.d21===21 && !state.unlocked21){ state.unlocked21=true; hits.push(21); }
+  if(state.d30===30 && !state.unlocked30){ state.unlocked30=true; hits.push(30); }
+  if(hits.length){ showHiddenCard(); }
+}
+function checkin(){
+  if(state.last===today()){ toast('今天已打卡 ✨'); return; }
+  state.last=today();
+  state.d7 = Math.min(state.d7+1,7);
+  state.d21= Math.min(state.d21+1,21);
+  state.d30= Math.min(state.d30+1,30);
+  unlockIf();
+  W(LSKEY,state); renderJourney();
+  if(!(state.d7===7||state.d21===21||state.d30===30)) toast('✅ 已記錄今日打卡');
+}
+[tick7,tick21,tick30].forEach(el=>el.addEventListener('change',e=>{ if(e.target.checked) checkin(); else renderJourney(); }));
+
+/* 隱藏靈魂卡（33） */
 const HIDDEN_CARDS = [
-  {t:"無名之光", m:"在你還需要名字之前，你已經是光。\n行動：今天，靜默 60 秒，讓自己被看見。"},
-  {t:"回到中心", m:"你不是風暴，你是中心。讓萬象繞你轉，而你安住其中。"},
-  {t:"允許發生", m:"收起掌控，讓生命與你一起完成今天。\n行動：寫下 3 句『我允許…』"},
-  {t:"含光而行", m:"溫柔不等於退讓；你是含著光的山。"},
-  {t:"回答自己的名字", m:"你呼喚了誰？其實你在呼喚自己。"},
-  {t:"還給時間", m:"把急躁還給時間，把清明還給自己。"},
-  {t:"看見足夠", m:"你已經擁有完成今天的『足夠』。"},
-  {t:"微小步", m:"一粒沙也能推動風向。\n行動：10 分鐘完成一小步。"},
-  {t:"就在此刻", m:"最合適的起點，總是此刻。"},
-  {t:"照見", m:"你不是被定義，你是會發光的『證據』。"},
-  {t:"靈魂呼氣", m:"吐出不是你的，空出能盛裝的。"},
-  {t:"做你的河", m:"不與海爭，卻總能抵達海。"},
-  {t:"扶著心", m:"給心一把椅子，讓它坐下說話。"},
-  {t:"把愛說完", m:"你以為太多，其實剛好。"},
-  {t:"席地而坐", m:"停止奔跑，地板也是抵達。"},
-  {t:"交還重擔", m:"不是你的，就讓它歸位。"},
-  {t:"給出請求", m:"向外伸手，本身就是勇氣。"},
-  {t:"慢一點", m:"快是方法，慢是力量。"},
-  {t:"收回目光", m:"你把世界看得太多，今天看回自己。"},
-  {t:"一致", m:"心、口、手同一方向，就會有風。"},
-  {t:"安穩", m:"你不是勉強自己，而是陪伴自己。"},
-  {t:"穿越噪音", m:"把『別人的聲音』關小，讓內在指引變大。"},
-  {t:"換位", m:"站到愛的位置，就看見路。"},
-  {t:"河口", m:"結束不是終點，是另一段流的開始。"},
-  {t:"種子日", m:"今天的一點點，就是明天的一整片。"},
+  {t:"光的來源", m:"你不是為了被點亮，而是喚醒沉睡的靈魂。\n行動：把注意力放在『我已經在發光』的一件小事上。"},
+  {t:"成為", m:"你沒有變得更好，只是變得更真。"},
+  {t:"真理之光", m:"真理不是理解後才存在，而是你放下後還在的那個東西。"},
+  {t:"愛的光源", m:"我的心不是倉庫，而是太陽。"},
+  {t:"靜默之光", m:"靜默不是空白，是語言之前的完整。"},
+  {t:"臣服之光", m:"臣服不是失去力量，而是不再與流對抗。"},
+  {t:"記得之光", m:"你不是在尋找，而是在記得。"},
+  {t:"創造之光", m:"創造不是你做了什麼，而是你允許什麼經由你而來。"},
+  {t:"完成之光", m:"完成不是結束，而是回到本源。"},
+  {t:"自由之光", m:"自由不是逃離，而是不再壓抑真實的自己。"},
+  {t:"歸來之光", m:"你一直都在這裡，一盞燈靜靜亮著。"},
+  {t:"無名之光", m:"在需要名字之前，你已經是光。"},
+  {t:"覺察", m:"看見正在發生的，不急著評價。"},
+  {t:"釋放", m:"鬆開手，讓能量回到流動。"},
+  {t:"信任", m:"允許被支持，允許更大的善展開。"},
+  {t:"行動", m:"最小可行的一步，立刻進場。"},
+  {t:"流動", m:"專注—回饋—微調—再專注。"},
+  {t:"共鳴", m:"把價值送出去，回聲會告訴你路。"},
+  {t:"整合", m:"把有效固化成結構，讓節奏延續。"},
+  {t:"允許休息", m:"休息不是退後，是能量回充。"},
+  {t:"邊界", m:"界線是對自己與他人的清晰。"},
+  {t:"專注", m:"你專注的地方，就是能量生長的地方。"},
+  {t:"勇氣", m:"帶著怕也前行，就是勇氣。"},
+  {t:"感恩", m:"感恩讓豐盛看得見。"},
+  {t:"澄明", m:"清晰來自看見，也來自放下雜訊。"},
+  {t:"對齊", m:"當意圖對齊，路徑會自己顯現。"},
   {t:"允許喜悅", m:"快樂不是成果，是方法。"},
   {t:"把手鬆開", m:"鬆開不是失去，是為接住做準備。"},
   {t:"為自己作證", m:"寫下 3 個『我做到了』。"},
@@ -188,126 +465,37 @@ const HIDDEN_CARDS = [
   {t:"同行", m:"把今天分享給一個人，路會變亮。"},
   {t:"許可", m:"准許自己是現在這樣，世界才好好愛你。"}
 ];
-
-/* =========================
-   2) 本地狀態儲存
-   ========================= */
-const LS = {
-  get(k, d){ try{ return JSON.parse(localStorage.getItem(k) ?? JSON.stringify(d)); }catch(e){ return d; } },
-  set(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
-};
-
-// 旅程 key
-const KEY = "enervi7_journey_v2";
-const todayStr = ()=> new Date().toISOString().slice(0,10);
-
-// 讀取或初始化
-const state = LS.get(KEY, {
-  d7:0, d21:0, d30:0,
-  lastCheckinDate:null,
-  unlockedIndex:0, // 已解鎖至第幾張卡（對應 HIDDEN_CARDS）
-  unlocked7:false, unlocked21:false, unlocked30:false
-});
-
-/* =========================
-   3) 繪製 UI
-   ========================= */
-function render(){
-  // 數字
-  d7.textContent   = state.d7;
-  d21.textContent  = state.d21;
-  d30.textContent  = state.d30;
-
-  // 進度
-  p7.style.width   = Math.min(state.d7/7*100, 100) + "%";
-  p21.style.width  = Math.min(state.d21/21*100, 100) + "%";
-  p30.style.width  = Math.min(state.d30/30*100, 100) + "%";
-
-  // 今日是否已打卡（三條同一個日期）
-  const done = state.lastCheckinDate === todayStr();
-  tick7.checked = done; tick21.checked = done; tick30.checked = done;
-
-  // 勳章鎖頭
-  setBadge(b7, state.unlocked7);
-  setBadge(b21, state.unlocked21);
-  setBadge(b30, state.unlocked30);
-}
-
-function setBadge(el, unlocked){
-  el.classList.remove("unlock");
-  if(unlocked){
-    el.classList.remove("locked");
-    el.classList.add("unlocked","unlock"); // unlock 會觸發光暈動畫
-    // 換圖示（開鎖）
-    el.innerHTML = `<svg viewBox="0 0 24 24" fill="none">
-      <path d="M17 10V7a5 5 0 10-10 0h2a3 3 0 116 0v3h-1a2 2 0 00-2 2v8a2 2 0 002 2h4a2 2 0 002-2v-8a2 2 0 00-2-2h-1z" fill="#c7b6ff"/></svg>`;
-  }else{
-    el.classList.add("locked");
-    el.classList.remove("unlocked");
-    el.innerHTML = `<svg viewBox="0 0 24 24" fill="none">
-      <path d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm0 2a3 3 0 013 3v3H9V7a3 3 0 013-3z" fill="#9a96c7"/></svg>`;
-  }
-}
-
-/* =========================
-   4) 打卡（每日僅一次）
-   ========================= */
-function checkinToday(){
-  // 已打過卡就不再計數
-  if(state.lastCheckinDate === todayStr()){
-    // 只把 UI 的勾選同步，不加天數
-    tick7.checked = true; tick21.checked = true; tick30.checked = true;
-    return;
-  }
-
-  state.lastCheckinDate = todayStr();
-  // 三條都 +1
-  state.d7 = Math.min(state.d7+1, 7);
-  state.d21 = Math.min(state.d21+1, 21);
-  state.d30 = Math.min(state.d30+1, 30);
-
-  // 是否解鎖
-  const unlocks = [];
-  if(state.d7 === 7 && !state.unlocked7){ state.unlocked7 = true; unlocks.push("7"); }
-  if(state.d21 === 21 && !state.unlocked21){ state.unlocked21 = true; unlocks.push("21"); }
-  if(state.d30 === 30 && !state.unlocked30){ state.unlocked30 = true; unlocks.push("30"); }
-
-  // 儲存 + 重繪
-  LS.set(KEY, state);
-  render();
-
-  // 若有解鎖 → 顯示卡牌（每次只顯示一張，若多個同時解鎖就依序顯示一張）
-  if(unlocks.length){
-    showHiddenCard();
-  }
-}
-
-/* =========================
-   5) 顯示隱藏卡（依序取用）
-   ========================= */
 function showHiddenCard(){
-  const idx = state.unlockedIndex % HIDDEN_CARDS.length;
+  const idx = state.idx % HIDDEN_CARDS.length;
   const card = HIDDEN_CARDS[idx];
-  state.unlockedIndex++;
-  LS.set(KEY, state);
-
-  cardTitle.textContent = `${card.t}`;
+  state.idx = idx+1; W(LSKEY,state);
+  cardTitle.textContent = `🧿 ${card.t}`;
   cardText.textContent  = card.m;
   unlockDlg.showModal();
 }
 
 /* =========================
-   6) 綁定三個 checkbox
-   （任一顆勾選都視為『今日打卡』）
+   初始化：旅程、神諭、若有舊分數則重畫雷達/卡
    ========================= */
-["tick7","tick21","tick30"].forEach(id=>{
-  document.getElementById(id).addEventListener("change", e=>{
-    if(e.target.checked) checkinToday(); else render();
-  });
-});
+function saveScores(vals){ localStorage.setItem('e7_scores_v1', JSON.stringify(vals)); }
+function loadScores(){ try{ return JSON.parse(localStorage.getItem('e7_scores_v1')||'[]'); }catch{return []} }
 
-// 初次渲染
-render();
+document.getElementById('genRadar').addEventListener('click',()=>{
+  const vals=computeStageAverages();
+  drawRadar(vals); renderInfoCards(vals); saveScores(vals); pickTodayOils(vals);
+});
+function boot(){
+  // 旅程
+  renderJourney();
+  // 神諭（每日不重複）
+  drawOracle(false);
+  // 若有上次分數 → 還原雷達、資訊卡、精油
+  const prev=loadScores();
+  if(prev.length){ drawRadar(prev); renderInfoCards(prev); pickTodayOils(prev); }
+}
+boot();
 </script>
+
+<!-- PWA（如需，可自行加入 sw.js 與 manifest；本檔不強制） -->
 </body>
 </html>
